@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Test</title>
+    <script src="./dist/bundle.js"></script>
+</head>
+<body>
+    <h1>Library testing</h1>
+    <script>
+        function collectData() {
+            const html = document.querySelector('#htmlinput').value;
+            const dataCollector = new test.DataCollector();
+            const output = dataCollector.collectData(html);
+            document.querySelector('#data_collector_output').innerText = JSON.stringify(output, null, 2);
+        }
+
+        window.collectData = collectData;
+    </script>
+    <div>
+        <h2>Data collector</h2>
+        <label for="htmlinput">Add html snippet.</label>
+        <textarea name="htmlinput" id="htmlinput"></textarea>
+        <button onclick="window.collectData()">Collect data</button>
+        <p id="data_collector_output"></p>
+    </div>
+</body>
+</html>
