@@ -1,6 +1,6 @@
 {
   "name": "page-processing-lib",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:Monsido/page-processing-lib.git",
   "author": "Monsido frontend team",
@@ -12,9 +12,7 @@
     "serve": "serve .",
     "lint": "eslint src --ext .ts",
     "test": "jest",
-    "patch": "npm version --patch",
-    "minor": "npm version minor",
-    "major": "npm version major"
+    "version": "yarn version"
   },
   "devDependencies": {
     "@monsido/eslint-config-typescript": "git+ssh://git@github.com:Monsido/eslint-config-typescript.git#1.0.9",
