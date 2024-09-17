@@ -6,6 +6,7 @@
   "author": "Monsido frontend team",
   "license": "MIT",
   "private": true,
+  "bin": "dist/bundle.js",
   "scripts": {
     "build": "node build.js",
     "serve": "serve .",

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-var-requires */
+// AI Generated Code
 const esbuild = require('esbuild');
 const { execSync } = require('child_process');
 const { existsSync, mkdirSync, rmSync } = require('fs');
@@ -25,10 +26,11 @@ esbuild.build({
     entryPoints: ['./src/index.ts'], // Replace with your entry file
     bundle: true,
     outfile: 'dist/bundle.js', // Replace with your desired output file
-    format: 'iife', // Bundle into an IIFE
+    format: 'esm', // Output format is ES module
     target: 'es2023', // Set the target to ES2023
-    platform: 'node', // Bundle for Node.js
+    platform: 'node', // Set the platform to Node
     minify: true, // Optional: minify the output
     sourcemap: true, // Optional: generate source maps
     loader: { '.ts': 'ts' }, // Use TypeScript loader
 }).catch(() => process.exit(1));
+// END AI Generated Code
