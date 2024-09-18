@@ -11,12 +11,10 @@
         "@typescript-eslint"
     ],
     "rules": {},
-    "files": [
-        "src/**/*.ts",
-        "src/**/*.spec.ts"
-    ],
     "ignorePatterns": [
         "node_modules/",
-        "dist/"
+        "dist/",
+        "build/",
+        "www/"
     ]
 }
