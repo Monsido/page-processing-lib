@@ -22,6 +22,6 @@ execSync('tsc --project tsconfig.json', { stdio: 'inherit' });
 // Run esbuild to bundle the library
 const settings = createBuildSettings({ 
     minify: true,
-    outfile: 'dist/bundle.js',
+    outfile: 'dist/index.js',
  });
 esbuild.build(settings);

@@ -6,7 +6,7 @@ const settings = createBuildSettings({
   banner: {
     js: `new EventSource('/esbuild').addEventListener('change', () => location.reload());`,
   },
-  outfile: 'www/bundle.js',
+  outfile: 'www/index.js',
 });
 
 const ctx = await esbuild.context(settings);

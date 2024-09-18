@@ -1,12 +1,12 @@
 {
   "name": "page-processing-lib",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:Monsido/page-processing-lib.git",
   "author": "Monsido frontend team",
   "license": "MIT",
   "private": true,
-  "bin": "dist/bundle.js",
   "scripts": {
     "build": "node build/build.mjs",
     "serve": "node build/serve.mjs",
