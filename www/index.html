@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Test</title>
+    <script type="module">
+        import { DataCollector, PageBuilder } from './bundle.js';
+
+        function collectData () {
+            const html = document.querySelector('#htmlinput').value;
+            const dataCollector = new DataCollector();
+            const output = dataCollector.collectData(html);
+            document.querySelector('#data_collector_output').innerText = JSON.stringify(output, null, 2);
+        }
+
+        const collectBtn = document.querySelector('#collectBtn');
+        collectBtn.addEventListener('click', collectData);
+
+        function buildHtml () {
+            const content = document.querySelector('#contentinput').value;
+            const pageBuilder = new PageBuilder();
+            const output = pageBuilder.makePage(content);
+            document.querySelector('#page_builder_output').innerText = JSON.stringify(output, null, 2);
+        }
+
+        const buildBtn = document.querySelector('#buildBtn');
+        buildBtn.addEventListener('click', buildHtml);
+    </script>
+</head>
+<body>
+    <h1>Library testing</h1>
+    <div>
+        <h2>Data collector</h2>
+        <label for="htmlinput">Add html snippet.</label><br>
+        <textarea name="htmlinput" id="htmlinput"></textarea><br>
+        <button id="collectBtn" type="button">Collect data</button>
+        <pre id="data_collector_output"></pre> 
+    </div>
+    <div>
+        <h2>Page builder</h2>
+        <label for="contentinput">Add content</label><br>
+        <textarea name="contentinput" id="contentinput"></textarea><br>
+        <button id="buildBtn" type="button">Build html</button>
+        <pre id="page_builder_output"></pre> 
+    </div>
+</body>
+</html>

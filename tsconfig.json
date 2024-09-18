@@ -4,15 +4,14 @@
         "declaration": true,
         "emitDeclarationOnly": true,
         "forceConsistentCasingInFileNames": true,
-        "moduleResolution": "nodenext",
-        "target": "ES2022",
-        "module": "NodeNext",
+        "moduleResolution": "Bundler", // Recommended in TS 5.0+ for applications that use a bundler
+        "target": "ES2023",
         "strict": true,
         "esModuleInterop": true, // Add this line for Jest compatibility
         "skipLibCheck": true // Optional: speeds up compilation
     },
     "include": [
         "src/**/*.ts",
-        "src/**/*.spec.ts" // Include your test files
+        "src/**/*.spec.ts"
     ]
 }

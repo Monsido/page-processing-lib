@@ -9,7 +9,7 @@ export class DataCollector {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     collectData (html: string): {tree:TreeType, css:CssType} {
-        // Dummy data for tree
+        // Mock up data for tree
         this.tree = {
             tagName: 'div',
             csId: 1,
@@ -35,7 +35,7 @@ export class DataCollector {
             ],
         };
 
-        // Dummy data for css
+        // Mock up data for css
         this.css = [
             'backgroundColor:"red";color: "white";',
             'fontSize:"24px";fontWeight:"bold";',
