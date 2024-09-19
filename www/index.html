@@ -21,7 +21,7 @@
             const content = document.querySelector('#contentinput').value;
             const pageBuilder = new PageBuilder();
             const output = pageBuilder.makePage(content);
-            document.querySelector('#page_builder_output').innerText = JSON.stringify(output, null, 2);
+            document.querySelector('#page_builder_output').innerHTML = output;
         }
 
         const buildBtn = document.querySelector('#buildBtn');

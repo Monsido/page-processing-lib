@@ -6,9 +6,9 @@ export class PageBuilder {
 
     constructor () {}
 
-    makePage (content: {tree: TreeType, css: CssType }): string {
+    makePage (content: {tree: TreeType, css: CssType }): HTMLElement {
         this.tree = content.tree;
         this.css = content.css;
-        return '<div><h1>Hello, World!</h1><p>This is a paragraph.</p></div>';
+        return '<div><h1>Hello, World!</h1><p>This is a paragraph.</p></div>' as unknown as HTMLElement;
     }
 }

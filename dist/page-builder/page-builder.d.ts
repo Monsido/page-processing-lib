@@ -7,5 +7,5 @@ export declare class PageBuilder {
     makePage(content: {
         tree: TreeType;
         css: CssType;
-    }): string;
+    }): HTMLElement;
 }

@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { DataCollector } from './data-collector';
 import { TreeType } from '../types/tree-type';
 import { CssType } from '../types/css-type';
@@ -10,7 +13,8 @@ describe('DataCollector', () => {
 
     it('should collect data and return tree and css', () => {
         const html = '<div><h1>Hello, World!</h1><p>This is a paragraph.</p></div>';
-        const result = dataCollector.collectData(html);
+        const element: HTMLElement = html as unknown as HTMLElement;
+        const result = dataCollector.collectData(element);
 
         const expectedTree: TreeType = {
             tagName: 'div',

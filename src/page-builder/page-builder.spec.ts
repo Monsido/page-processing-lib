@@ -33,6 +33,6 @@ describe('PageBuilder', () => {
     it('should set tree and css properties when makePage is called', () => {
         const content = { tree: mockTree, css: mockCss };
         const output = pageBuilder.makePage(content);
-        expect(output).toBe('<div><h1>Hello, World!</h1><p>This is a paragraph.</p></div>');
+        expect(output).toBe('<div><h1>Hello, World!</h1><p>This is a paragraph.</p></div>' as unknown as HTMLElement);
     });
 });

@@ -4,7 +4,7 @@ export declare class DataCollector {
     private tree;
     private css;
     constructor();
-    collectData(html: string): {
+    collectData(html: HTMLElement): {
         tree: TreeType;
         css: CssType;
     };

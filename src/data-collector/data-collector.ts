@@ -8,7 +8,7 @@ export class DataCollector {
     constructor () {}
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    collectData (html: string): {tree:TreeType, css:CssType} {
+    collectData (html: HTMLElement): {tree:TreeType, css:CssType} {
         // Mock up data for tree
         this.tree = {
             tagName: 'div',
