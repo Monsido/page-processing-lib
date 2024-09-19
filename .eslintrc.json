@@ -1,0 +1,20 @@
+{
+    "extends": [
+        "@monsido/eslint-config-typescript"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2023,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {},
+    "ignorePatterns": [
+        "node_modules/",
+        "dist/",
+        "build/",
+        "www/"
+    ]
+}
