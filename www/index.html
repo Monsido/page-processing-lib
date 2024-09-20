@@ -7,10 +7,10 @@
     <script type="module">
         import { DataCollector, PageBuilder } from './index.js';
 
-        function collectData () {
+        async function collectData () {
             const html = document.documentElement
             const dataCollector = new DataCollector();
-            const output = dataCollector.collectData(html);
+            const output = await dataCollector.collectData(html);
             document.querySelector('#data_collector_output').innerText = JSON.stringify(output, null, 2);
         }
 
@@ -34,7 +34,7 @@
         <h2>Data collector</h2>
         <!-- <label for="htmlinput">Add html snippet.</label><br>
         <textarea name="htmlinput" id="htmlinput"></textarea><br> -->
-        <button id="collectBtn" type="button">Collect data</button>
+        <button type="button" id="collectBtn">Collect data</button>
         <pre id="data_collector_output"></pre>
     </div>
     <div>
@@ -43,6 +43,12 @@
         <textarea name="contentinput" id="contentinput"></textarea><br>
         <button id="buildBtn" type="button">Build html</button>
         <pre id="page_builder_output"></pre>
+    </div>
+    <div hidden>
+        Hidden text
+    </div>
+    <div aria-hidden>
+        Aria-hidden text
     </div>
 </body>
 </html>

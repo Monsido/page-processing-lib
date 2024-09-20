@@ -1,5 +1,5 @@
 import { CssType } from '../types/css-type';
-import { TreeType } from '../types/tree-type';
+import { TextNodeType, TreeType } from '../types/tree-type';
 
 export class DataCollector {
     private tree: TreeType = {};
@@ -10,69 +10,91 @@ export class DataCollector {
 
     constructor () {}
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    collectData (html: HTMLElement): {tree:TreeType, css:CssType} {
-
-        // Mock up data for tree
-        /* this.tree = {
-            tagName: 'div',
-            csId: 1,
-            children: [
-                {
-                    tagName: 'h1',
-                    csId: 2,
-                    children: [
-                        {
-                            text: 'Hello, World!',
-                        },
-                    ],
-                },
-                {
-                    tagName: 'p',
-                    csId: 3,
-                    children: [
-                        {
-                            text: 'This is a paragraph.',
-                        },
-                    ],
-                },
-            ],
-        }; */
+    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType}> {
         this.css.push(this.getDefaultComputedStyles());
 
-        const tree = this.processTree(html);
-        console.log(tree);
+        const tree = await this.processTree(html);
+
+        console.log(JSON.stringify(tree, null, 4));
+        //    console.log(JSON.stringify(this.css, null, 4));
 
         return { tree: this.tree, css: this.css };
     }
 
-    private processTree (el: HTMLElement): TreeType {
-        const data: TreeType = {
-            tagName: el.tagName.toUpperCase(),
-        };
-        const { styles, sameId } = this.collectUniqueStyles(el);
+    private processTree (el: HTMLElement): Promise<TreeType> {
+        return new Promise(async (resolve) => {
+            setTimeout(async () => {
+                const data: TreeType = {
+                    tagName: el.tagName.toUpperCase(),
+                    attr: this.getAttributesList(el),
+                };
+                const { styles, sameId } = this.collectUniqueStyles(el);
 
-        if (styles) {
-            if (sameId === undefined) {
-                data.csId = this.css.length;
-                this.css.push(styles);
-            } else {
-                data.csId = sameId;
-            }
-        } else {
-            data.csId = 0;
-        }
-        data.children = [];
-        el.childNodes.forEach(node => {
-            if (node.nodeType === 1) {
-                if (!this.disallowedTagNames.includes((node as HTMLElement).tagName.toUpperCase())) {
-                    (data.children as TreeType[]).push(this.processTree(node as HTMLElement));
+                if (styles) {
+                    if (sameId === undefined) {
+                        data.csId = this.css.length;
+                        this.css.push(styles);
+                    } else {
+                        data.csId = sameId;
+                    }
+                } else {
+                    data.csId = 0;
                 }
-            } else if (node.nodeType === 3) {
 
-            }
+                const nodes = Array.from(el.childNodes);
+                const lastIndex = nodes.length - 1;
+
+                if (!nodes.length) {
+                    resolve(data);
+                } else {
+                    data.children = [];
+
+                    for (let i = 0; i < nodes.length; i += 1) {
+                        const node = nodes[i];
+                        if (node.nodeType === 1) {
+                            if (!this.disallowedTagNames.includes((node as HTMLElement).tagName.toUpperCase())) {
+                                const child = await this.processTree(node as HTMLElement);
+                                (data.children as TreeType[]).push(child);
+                            }
+                        } else if (node.nodeType === 3) {
+                            (data.children as TextNodeType[]).push({
+                                text: this.cleanUpText(node.textContent || ''),
+                            });
+                        }
+
+                        if (lastIndex === i) {
+                            if (data.children && !data.children.length) {
+                                delete data.children;
+                            }
+                            resolve(data);
+                        }
+                    }
+                }
+
+                /* el.childNodes.forEach(async node => {
+                    if (node.nodeType === 1) {
+                        if (!this.disallowedTagNames.includes((node as HTMLElement).tagName.toUpperCase())) {
+                            (data.children as TreeType[]).push(await this.processTree(node as HTMLElement));
+                        }
+                    } else if (node.nodeType === 3) {
+                        (data.children as TextNodeType[]).push({
+                            text: this.cleanUpText(node.textContent || ''),
+                        });
+                    }
+                }); */
+            });
+
         });
-        return data;
+    }
+
+    private cleanUpText (text: string): string {
+        return text.replaceAll(/ +/g, ' ');
+    }
+
+    private getAttributesList (el: HTMLElement): string[][] {
+        const attrNames = Array.from(el.attributes);
+        const result: string[][] = attrNames.map(n => [n.nodeName, n.nodeValue || '']);
+        return result;
     }
 
     private getDefaultComputedStyles (): string {
@@ -83,7 +105,6 @@ export class DataCollector {
         document.body.removeChild(defaultElement);
         return styles;
     }
-
 
     private getStylesAsRecord (el: HTMLElement): Record<string, string> {
         const styleObj = window.getComputedStyle(el);
@@ -107,7 +128,6 @@ export class DataCollector {
                 }
             }
         }
-
         return { styles, sameId };
     }
 
