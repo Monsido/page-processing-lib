@@ -4,7 +4,7 @@ export type TreeType = {
     attr?: Array<Array<string>>,
     children?: Array<ElementType | TextNodeType>
     hasShadow?: boolean
-}
+} | Record<string, never>
 
 export type ElementType = {
     tagName: string,
