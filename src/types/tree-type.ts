@@ -2,7 +2,7 @@ export type TreeType = {
     tagName: string,
     csId?: number,
     attr?: Array<Array<string>>,
-    children?: Array<ElementType | TextNodeType>
+    children?: Array<TreeType | TextNodeType>
     hasShadow?: boolean
 } | Record<string, never>
 
