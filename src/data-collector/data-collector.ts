@@ -8,16 +8,9 @@ export class DataCollector {
     private disallowedTagNames = ['STYLE', 'SCRIPT'];
     private defaultStyles?: Record<string, string>;
 
-    constructor () {}
-
     async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType}> {
-        this.css.push(this.getDefaultComputedStyles());
-
-        const tree = await this.processTree(html);
-
-        console.log(JSON.stringify(tree, null, 4));
-        //    console.log(JSON.stringify(this.css, null, 4));
-
+        this.setDefaultComputedStyles();
+        this.tree = await this.processTree(html);
         return { tree: this.tree, css: this.css };
     }
 
@@ -25,22 +18,10 @@ export class DataCollector {
         return new Promise(async (resolve) => {
             setTimeout(async () => {
                 const data: TreeType = {
+                    csId: this.processStyles(el),
                     tagName: el.tagName.toUpperCase(),
                     attr: this.getAttributesList(el),
                 };
-                const { styles, sameId } = this.collectUniqueStyles(el);
-
-                if (styles) {
-                    if (sameId === undefined) {
-                        data.csId = this.css.length;
-                        this.css.push(styles);
-                    } else {
-                        data.csId = sameId;
-                    }
-                } else {
-                    data.csId = 0;
-                }
-
                 const nodes = Array.from(el.childNodes);
                 const lastIndex = nodes.length - 1;
 
@@ -70,40 +51,32 @@ export class DataCollector {
                         }
                     }
                 }
-
-                /* el.childNodes.forEach(async node => {
-                    if (node.nodeType === 1) {
-                        if (!this.disallowedTagNames.includes((node as HTMLElement).tagName.toUpperCase())) {
-                            (data.children as TreeType[]).push(await this.processTree(node as HTMLElement));
-                        }
-                    } else if (node.nodeType === 3) {
-                        (data.children as TextNodeType[]).push({
-                            text: this.cleanUpText(node.textContent || ''),
-                        });
-                    }
-                }); */
-            });
-
+            }, 0);
         });
     }
 
-    private cleanUpText (text: string): string {
-        return text.replaceAll(/ +/g, ' ');
-    }
-
-    private getAttributesList (el: HTMLElement): string[][] {
-        const attrNames = Array.from(el.attributes);
-        const result: string[][] = attrNames.map(n => [n.nodeName, n.nodeValue || '']);
-        return result;
-    }
-
-    private getDefaultComputedStyles (): string {
+    private setDefaultComputedStyles (): void {
         const defaultElement = document.createElement(`acq-default-element-${Date.now()}`);
         document.body.appendChild(defaultElement);
-        const styles = this.collectStyles(defaultElement);
         this.defaultStyles = this.getStylesAsRecord(defaultElement);
+        this.css.push(this.collectStyles(this.defaultStyles));
         document.body.removeChild(defaultElement);
-        return styles;
+    }
+
+    private processStyles (el: HTMLElement): number | undefined {
+        const { styles, sameId } = this.collectUniqueStyles(el);
+        // No unique styles means the style is identical to the default
+        let csId = 0;
+
+        if (styles) {
+            if (sameId === undefined) {
+                csId = this.css.length;
+                this.css.push(styles);
+            } else {
+                csId = sameId;
+            }
+        }
+        return csId;
     }
 
     private getStylesAsRecord (el: HTMLElement): Record<string, string> {
@@ -117,7 +90,7 @@ export class DataCollector {
     }
 
     private collectUniqueStyles (el: HTMLElement): {styles: string, sameId: number | undefined} {
-        const styles = this.collectStyles(el, this.defaultStyles);
+        const styles = this.collectStyles(this.getStylesAsRecord(el), this.defaultStyles);
         let sameId: number | undefined;
 
         if (styles.length) {
@@ -131,8 +104,7 @@ export class DataCollector {
         return { styles, sameId };
     }
 
-    private collectStyles (el: HTMLElement, defaultStyles?: Record<string, string>): string {
-        let stylesObj = this.getStylesAsRecord(el);
+    private collectStyles (stylesObj: Record<string, string>, defaultStyles?: Record<string, string>): string {
         let styleString = '';
 
         if (defaultStyles) {
@@ -142,7 +114,6 @@ export class DataCollector {
         for (const k of Object.keys(stylesObj)) {
             styleString += k + ':' + stylesObj[k];
         }
-
         return styleString;
     }
 
@@ -156,4 +127,15 @@ export class DataCollector {
         }
         return result;
     }
+
+    private getAttributesList (el: HTMLElement): string[][] {
+        const attrNames = Array.from(el.attributes);
+        const result: string[][] = attrNames.map(n => [n.nodeName, n.nodeValue || '']);
+        return result;
+    }
+
+    private cleanUpText (text: string): string {
+        return text.replaceAll(/ +/g, ' ');
+    }
+
 }
