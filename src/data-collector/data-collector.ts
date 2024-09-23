@@ -14,22 +14,31 @@ export class DataCollector {
         return { tree: this.tree, css: this.css };
     }
 
-    private processTree (el: HTMLElement): Promise<TreeType> {
+    private processTree (el: HTMLElement | ShadowRoot): Promise<TreeType> {
         return new Promise(async (resolve) => {
             setTimeout(async () => {
-                const data: TreeType = {
-                    csId: this.processStyles(el),
-                    tagName: el.tagName.toUpperCase(),
-                    attr: this.getAttributesList(el),
-                };
+                const data: TreeType = {};
+
+                if (el.nodeType !== 11) { // not a shadowRoot
+                    data.tagName = (el as HTMLElement).tagName.toUpperCase(),
+                    data.csId = this.processStyles(el as HTMLElement);
+                    data.attr = this.getAttributesList(el as HTMLElement);
+
+                    const shadowRoot = (el as HTMLElement).shadowRoot;
+                    if (shadowRoot) {
+                        data.shadowRoot = await this.processTree(shadowRoot);
+                    }
+                }
+
+                data.children = [];
+
                 const nodes = Array.from(el.childNodes);
                 const lastIndex = nodes.length - 1;
 
-                if (!nodes.length) {
+                if (!nodes.length && !data.children.length) {
+                    delete data.children;
                     resolve(data);
                 } else {
-                    data.children = [];
-
                     for (let i = 0; i < nodes.length; i += 1) {
                         const node = nodes[i];
                         if (node.nodeType === 1) {

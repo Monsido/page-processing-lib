@@ -1,9 +1,9 @@
 export type TreeType = {
-    tagName: string,
+    tagName?: string,
     csId?: number,
     attr?: Array<Array<string>>,
-    children?: Array<TreeType | TextNodeType>
-    hasShadow?: boolean
+    children?: Array<TreeType | TextNodeType>,
+    shadowRoot?: TreeType,
 } | Record<string, never>
 
 export type ElementType = {
