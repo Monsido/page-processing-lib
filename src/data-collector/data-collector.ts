@@ -103,27 +103,22 @@ export class DataCollector {
         let sameId: number | undefined;
 
         if (styles.length) {
-            for (let i = 0; i < this.css.length; i += 1) {
-                if (styles === this.css[i]) {
-                    sameId = i;
-                    break;
-                }
+            const index = this.css.indexOf(styles);
+            if (index !== -1) {
+                sameId = index;
             }
         }
         return { styles, sameId };
     }
 
     private collectStyles (stylesObj: Record<string, string>, defaultStyles?: Record<string, string>): string {
-        let styleString = '';
-
         if (defaultStyles) {
             stylesObj = this.removeDefaultStyles(stylesObj, defaultStyles);
         }
 
-        for (const k of Object.keys(stylesObj)) {
-            styleString += k + ':' + stylesObj[k];
-        }
-        return styleString;
+        return Object.entries(stylesObj)
+            .map(([key, value]) => `${key}:${value}`)
+            .join('');
     }
 
     private removeDefaultStyles (stylesObj: Record<string, string>, defaultObj: Record<string, string>): Record<string, string> {
