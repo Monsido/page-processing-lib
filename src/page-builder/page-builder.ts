@@ -40,14 +40,16 @@ export class PageBuilder {
         if ('tagName' in node) {
             return this.parseElementNode(node);
         }
-        return this.parseTextNode(node as TextNodeType);
+        if ('text' in node) {
+            return this.parseTextNode(node as TextNodeType);
+        }
+        throw new Error('Unknown node type');
     }
 
-    private parseElementNode (node: TreeType): HTMLElement {
-        if (!node.tagName) {
-            throw new Error('ElementNode must have a tagName property');
+    private parseElementNode (node: ElementType): HTMLElement {
+        if (node.tagName === '') {
+            throw new Error('Tag name cannot be empty for an element node');
         }
-
         const element = document.createElement(node.tagName);
 
         if (node.csId !== undefined && node.csId >= 0) {
@@ -68,10 +70,7 @@ export class PageBuilder {
     }
 
     private parseTextNode (node: TextNodeType): Text {
-        if (!node.text) {
-            throw new Error('TextNode must have a text property');
-        }
-        return document.createTextNode(node.text || '');
+        return document.createTextNode(node.text);
     }
 
     private dataCsId (element: HTMLElement, nodeCsId: number): void {
@@ -80,7 +79,10 @@ export class PageBuilder {
 
     private setAttributes (element: HTMLElement, attributes: Array<Array<string>>): void {
         attributes.forEach((attribute) => {
-            element.setAttribute(attribute[0], attribute[1]);
+            if (attribute[0] === '') {
+                throw new Error('Attribute key cannot be empty for an element node');
+            }
+            element.setAttribute(attribute[0], attribute[1] || '');
         });
     }
 
