@@ -42,6 +42,31 @@ describe('DataCollector', () => {
         });
     });
 
+    describe('Collects styles', () => {
+        const html = document.createElement('html');
+        html.innerHTML = `<head></head><body>
+        <div style="display: inline-block;color: blue;">test 1</div>
+        <div style="display: inline-block;color: blue;">test 2</div>
+        </body>`;
+
+        // A new line means a new text entry into the result Tree
+
+        it('elements with the same styles should have the same csId', async () => {
+            const result = await dataCollector.collectData(html);
+            const elements = (result.tree.children as TreeType[])[1].children as TreeType[];
+
+            expect(elements[1].csId).toEqual(3);
+            expect(elements[3].csId).toEqual(3);
+        });
+
+        it('same styles are added only once', async () => {
+            const result = await dataCollector.collectData(html);
+            expect(
+                result.css.filter(i => i === 'color:blue;display:inline-block;').length,
+            ).toEqual(1);
+        });
+
+    });
 
     describe('Collects default CSS', () => { // Disabled since Jest/JSDOM does not provide correct style inheritance
         const html = document.createElement('html');
@@ -99,7 +124,7 @@ describe('DataCollector', () => {
         <div style="padding:2px" id="testDiv" hidden>test</div>
         </body>`;
 
-        // A broken line means a new text entry into the result Tree
+        // A new line means a new text entry into the result Tree
 
         it('should collect attributes in the correct order - one element', async () => {
             const result = await dataCollector.collectData(html);
