@@ -95,13 +95,4 @@ export class PageBuilder {
             root.appendChild(childNode);
         });
     }
-
-    private serializeDocument (docFragment: DocumentFragment): string {
-        const shadowRoots = Array.from(docFragment.querySelectorAll('*'))
-            .map((el: Element) => el.shadowRoot)
-            .filter((shadowRoot): shadowRoot is ShadowRoot => shadowRoot !== null);
-
-        // Serialize the main document with shadow roots
-        return `${doc.head.outerHTML}${doc.body.getHTML({ shadowRoots })}`;
-    }
 }
