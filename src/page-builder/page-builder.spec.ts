@@ -17,7 +17,7 @@ describe('PageBuilder', () => {
         const css: CssType = ['color: red;'];
         const result = pageBuilder.makePage({ tree, css });
         // eslint-disable-next-line max-len
-        expect(result).toContain('<!DOCTYPE html><html><head><style type=\"text/css\">[data-cs-0] {color: red;}</style></head><body><div><p>Hello World</p></div></body></html>');
+        expect(result).toContain('<html><head><style type=\"text/css\">[data-cs-0] {color: red;}</style></head><body><div><p>Hello World</p></div></body></html>');
     });
 
     it('should set attributes correctly', () => {

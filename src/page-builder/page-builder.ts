@@ -2,90 +2,106 @@ import { CssType } from '../types/css-type';
 import { ElementType, TextNodeType, TreeType } from '../types/tree-type';
 
 export class PageBuilder {
-    private css: CssType | undefined;
-    private tree: TreeType | undefined;
+    makePage (content: { tree: TreeType, css: CssType }): DocumentFragment {
+        const rootNode = this.traverseTree(content.tree);
+        const docFragment = document.createDocumentFragment();
+        docFragment.appendChild(rootNode);
 
-    constructor () {}
+        const styles = this.buildStyle(content.css);
+        this.appendStyle(docFragment, styles);
 
-    makePage (content: { tree: TreeType, css: CssType }): string {
-        this.tree = content.tree;
-        this.css = content.css;
-
-        return this.buildHtmlFromTree(this.tree);
+        return docFragment;
     }
 
-    private buildHtmlFromTree (tree: TreeType): string {
-        const body = this.parseNode(tree);
-        const head = this.buildStyle();
-
-        return `<!DOCTYPE html><html><head>${head}</head><body>${body}</body></html>`;
-    }
-
-    private buildStyle (): string {
-        if (this.css) {
-            const styles = this.css.map((css: string, index: number) => {
-                return `[data-cs-${index}] {${css}}`;
-            }).join(' ');
-            return `<style type="text/css">${styles}</style>`;
+    private appendStyle (docFragment: DocumentFragment, styles: HTMLStyleElement): void {
+        const headEl = docFragment.querySelector('head');
+        if (headEl) {
+            headEl.appendChild(styles);
+        } else {
+            docFragment.appendChild(styles);
         }
-        return '';
     }
 
-    private parseNode (node: ElementType | TextNodeType): string {
+    private buildStyle (css: CssType): HTMLStyleElement {
+        const styleElement = document.createElement('style');
+
+        if (css && css.length) {
+            const styles = css.map((style: string, index: number) => {
+                return `[data-cs-${index}] {${style}}`;
+            }).join(' ');
+
+            styleElement.textContent = styles;
+        }
+
+        return styleElement;
+    }
+
+    private traverseTree (node: ElementType | TextNodeType): Node {
         if ('tagName' in node) {
             return this.parseElementNode(node);
-        } else {
-            return this.parseTextNode(node);
         }
+        return this.parseTextNode(node as TextNodeType);
     }
 
-    private parseElementNode (node: ElementType): string {
-        let nodeDataCsId = '';
-        let nodeShadowTemplate = '';
-        let nodeChildren = '';
-        let nodeAttributes = '';
-
-        if (node.csId !== undefined) {
-            nodeDataCsId = this.setCsId(node.csId);
+    private parseElementNode (node: TreeType): HTMLElement {
+        if (!node.tagName) {
+            throw new Error('ElementNode must have a tagName property');
         }
 
+        const element = document.createElement(node.tagName);
+
+        if (node.csId !== undefined && node.csId >= 0) {
+            this.dataCsId(element, node.csId);
+        }
         if (node.attr && node.attr.length) {
-            nodeAttributes = this.setAttributes(node.attr);
+            this.setAttributes(element, node.attr);
         }
 
-        if (Boolean(node.hasShadow)) {
-            const shadowChildren = node.children && node.children.length ? this.appendChildren(node.children) : '';
-            nodeShadowTemplate = this.setShadowDom(shadowChildren);
+        if (node.shadowRoot?.children && node.shadowRoot.children.length) {
+            this.setShadowDom(element, node.shadowRoot.children);
         }
 
-        if (!Boolean(node.hasShadow)) {
-            nodeChildren = node.children && node.children.length ? this.appendChildren(node.children) : '';
+        if (node.children && node.children.length) {
+            this.appendChildren(element, node.children);
         }
-
-        return `<${node.tagName}${nodeDataCsId ? ' ' + nodeDataCsId : ''}${nodeAttributes ? ' ' + nodeAttributes : ''}>${nodeShadowTemplate}${nodeChildren}</${node.tagName}>`;
+        return element;
     }
 
-    private parseTextNode (node: TextNodeType): string {
-        return node.text || '';
+    private parseTextNode (node: TextNodeType): Text {
+        if (!node.text) {
+            throw new Error('TextNode must have a text property');
+        }
+        return document.createTextNode(node.text || '');
     }
 
-    private setCsId (csId: number): string {
-        return `data-cs-${csId}`;
+    private dataCsId (element: HTMLElement, nodeCsId: number): void {
+        element.setAttribute(`data-cs-${nodeCsId.toString()}`, '');
     }
 
-    private setShadowDom (children: string): string {
-        return `<template shadowrootmode="open">${children}</template>`;
-    }
-
-    private setAttributes (attributes: Array<Array<string>>): string {
-        return attributes.map(attr => `${attr[0]}="${attr[1]}"`).join(' ');
-    }
-
-    private appendChildren (children: Array<ElementType | TextNodeType>): string {
-        let childrenHtml = '';
-        children.forEach((child) => {
-            childrenHtml += this.parseNode(child);
+    private setAttributes (element: HTMLElement, attributes: Array<Array<string>>): void {
+        attributes.forEach((attribute) => {
+            element.setAttribute(attribute[0], attribute[1]);
         });
-        return childrenHtml;
+    }
+
+    private setShadowDom (element: HTMLElement, children: (ElementType | TextNodeType)[]): void {
+        const shadowRoot = element.attachShadow({ mode: 'open' });
+        this.appendChildren(shadowRoot, children);
+    }
+
+    private appendChildren (root: HTMLElement | ShadowRoot, children: Array<ElementType | TextNodeType>): void {
+        children.forEach((child) => {
+            const childNode = this.traverseTree(child);
+            root.appendChild(childNode);
+        });
+    }
+
+    private serializeDocument (docFragment: DocumentFragment): string {
+        const shadowRoots = Array.from(docFragment.querySelectorAll('*'))
+            .map((el: Element) => el.shadowRoot)
+            .filter((shadowRoot): shadowRoot is ShadowRoot => shadowRoot !== null);
+
+        // Serialize the main document with shadow roots
+        return `${doc.head.outerHTML}${doc.body.getHTML({ shadowRoots })}`;
     }
 }

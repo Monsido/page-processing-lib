@@ -61,7 +61,8 @@
 
             
             const outputEl = document.querySelector('.page-builder #output');
-            outputEl.innerHTML = output;
+            outputEl.innerHTML = '';
+            outputEl.appendChild(output);
         }
 
         const buildBtn = document.querySelector('.page-builder .build-btn');
