@@ -1,13 +1,17 @@
 import { CssType } from '../types/css-type';
-import { ElementType, TextNodeType, TreeType } from '../types/tree-type';
+import { ElementType, ShadowRootType, TextNodeType, TreeType } from '../types/tree-type';
 
+type CssKVType = Record<string, string>;
 export class PageBuilder {
+    css: CssType = [];
     makePage (content: { tree: TreeType, css: CssType }): DocumentFragment {
-        const rootNode = this.traverseTree(content.tree);
+        this.css = content.css;
+        const rootCssList: CssKVType = {};
+        const rootNode = this.traverseTree(content.tree, rootCssList);
         const docFragment = document.createDocumentFragment();
         docFragment.appendChild(rootNode);
 
-        const styles = this.buildStyle(content.css);
+        const styles = this.buildStyle(rootCssList);
         this.appendStyle(docFragment, styles);
 
         return docFragment;
@@ -22,50 +26,39 @@ export class PageBuilder {
         }
     }
 
-    private buildStyle (css: CssType): HTMLStyleElement {
+    private buildStyle (css: CssKVType): HTMLStyleElement {
         const styleElement = document.createElement('style');
+        let styles = '';
+        Object.keys(css || {}).forEach((key: string) => {
+            styles += `[data-cs-${key}] {${css[parseInt(key)]}} `;
+        });
 
-        if (css && css.length) {
-            const styles = css.map((style: string, index: number) => {
-                return `[data-cs-${index}] {${style}}`;
-            }).join(' ');
-
-            styleElement.textContent = styles;
-        }
-
+        styleElement.textContent = styles.trimEnd();
         return styleElement;
     }
 
-    private traverseTree (node: ElementType | TextNodeType): Node {
+    private traverseTree (node: ElementType | TextNodeType, cssList: CssKVType): Node {
         if ('tagName' in node) {
-            return this.parseElementNode(node);
+            return this.parseElementNode(node, cssList);
         }
         if ('text' in node) {
             return this.parseTextNode(node as TextNodeType);
         }
-        throw new Error('Unknown node type');
+        throw new Error('NodeType: Unknown node type');
     }
 
-    private parseElementNode (node: ElementType): HTMLElement {
-        if (node.tagName === '') {
-            throw new Error('Tag name cannot be empty for an element node');
-        }
-        const element = document.createElement(node.tagName);
-
-        if (node.csId !== undefined && node.csId >= 0) {
-            this.dataCsId(element, node.csId);
-        }
-        if (node.attr && node.attr.length) {
-            this.setAttributes(element, node.attr);
+    private parseElementNode (node: ElementType, cssList: CssKVType): HTMLElement {
+        let element: HTMLElement;
+        try {
+            element = document.createElement(node.tagName);
+        } catch (error) {
+            throw new Error(`TagName: ${error}`);
         }
 
-        if (node.shadowRoot?.children && node.shadowRoot.children.length) {
-            this.setShadowDom(element, node.shadowRoot.children);
-        }
-
-        if (node.children && node.children.length) {
-            this.appendChildren(element, node.children);
-        }
+        this.dataCsId(element, cssList, node.csId);
+        this.setAttributes(element, node.attr);
+        this.setShadowDom(element, node.shadowRoot);
+        this.appendChildren(element, cssList, node.children);
         return element;
     }
 
@@ -73,27 +66,39 @@ export class PageBuilder {
         return document.createTextNode(node.text);
     }
 
-    private dataCsId (element: HTMLElement, nodeCsId: number): void {
-        element.setAttribute(`data-cs-${nodeCsId.toString()}`, '');
+    private dataCsId (element: HTMLElement, cssList: CssKVType, nodeCsId?: number): void {
+        if (nodeCsId !== undefined) {
+            element.setAttribute(`data-cs-${nodeCsId.toString()}`, '');
+            cssList[nodeCsId] = this.css[nodeCsId];
+        } else {
+            throw new Error(`Invalid data-cs-id: "${nodeCsId}"`);
+        }
     }
 
-    private setAttributes (element: HTMLElement, attributes: Array<Array<string>>): void {
-        attributes.forEach((attribute) => {
-            if (attribute[0] === '') {
-                throw new Error('Attribute key cannot be empty for an element node');
+    private setAttributes (element: HTMLElement, attributes?: Array<Array<string>>): void {
+        (attributes || []).forEach((attribute) => {
+            try {
+                element.setAttribute(attribute[0], attribute[1] || '');
+            } catch (error) {
+                throw new Error(`Attribute: ${error}`);
             }
-            element.setAttribute(attribute[0], attribute[1] || '');
         });
     }
 
-    private setShadowDom (element: HTMLElement, children: (ElementType | TextNodeType)[]): void {
+    private setShadowDom (element: HTMLElement, shadowRootNode?: ShadowRootType): void {
+        if (!shadowRootNode) {
+            return;
+        }
         const shadowRoot = element.attachShadow({ mode: 'open' });
-        this.appendChildren(shadowRoot, children);
+        const shadowRootCssList: CssKVType = {};
+        this.appendChildren(shadowRoot, shadowRootCssList, shadowRootNode.children);
+        const styles = this.buildStyle(shadowRootCssList);
+        shadowRoot.appendChild(styles);
     }
 
-    private appendChildren (root: HTMLElement | ShadowRoot, children: Array<ElementType | TextNodeType>): void {
-        children.forEach((child) => {
-            const childNode = this.traverseTree(child);
+    private appendChildren (root: HTMLElement | ShadowRoot, cssList: CssKVType, children?: Array<ElementType | TextNodeType>): void {
+        (children || []).forEach((child) => {
+            const childNode = this.traverseTree(child, cssList);
             root.appendChild(childNode);
         });
     }
