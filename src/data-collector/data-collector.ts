@@ -1,5 +1,6 @@
 import { CssType } from '../types/css-type';
 import { TextNodeType, TreeType } from '../types/tree-type';
+import packageJson from '../../package.json';
 
 export class DataCollector {
     private tree: TreeType = {};
@@ -8,10 +9,10 @@ export class DataCollector {
     private disallowedTagNames = ['STYLE', 'SCRIPT'];
     private defaultStyles?: Record<string, string>;
 
-    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType}> {
+    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, v: string}> {
         this.setDefaultComputedStyles();
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css };
+        return { tree: this.tree, css: this.css, v: packageJson.version };
     }
 
     private processTree (el: HTMLElement | ShadowRoot): Promise<TreeType> {
