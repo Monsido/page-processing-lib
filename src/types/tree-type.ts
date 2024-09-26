@@ -1,10 +1,10 @@
 export type TreeType = {
-    tagName: string,
+    tagName?: string,
     csId?: number,
     attr?: Array<Array<string>>,
-    children?: Array<ElementType | TextNodeType>
-    hasShadow?: boolean
-}
+    children?: Array<TreeType | TextNodeType>,
+    shadowRoot?: TreeType,
+} | Record<string, never>
 
 export type ElementType = {
     tagName: string,
