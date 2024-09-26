@@ -68,7 +68,7 @@ describe('DataCollector', () => {
 
     });
 
-    describe('Collects default CSS', () => { // Disabled since Jest/JSDOM does not provide correct style inheritance
+    describe('Collects default CSS', () => {
         const html = document.createElement('html');
 
         let windowSpy: jest.SpyInstance<unknown>;
