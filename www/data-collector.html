@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Collector</title>
+    <script type="module">
+        class MyElement extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: "open" });
+                this.render();
+            }
+            render() {
+                const template = document.createElement('template');
+                template.innerHTML = `
+                    <div class="wrapper">
+                        <header>
+                            Hi!
+                        </header>
+                        <main>
+                            <slot name="main"></slot>
+                        </main>
+                        <div hidden>
+                            Some content
+                        </div>
+                    </div>
+                `;
+                if (this.shadowRoot) {
+                    this.shadowRoot.innerHTML = '';
+                    this.shadowRoot.appendChild(template.content);
+                }
+            }
+        }
+        customElements.define('my-element', MyElement);
+    </script>
+    <script type="module">  
+        import { DataCollector } from './index.js';
+
+        async function collectData () {
+            const html = document.documentElement;
+            const dataCollector = new DataCollector();
+            const output = await dataCollector.collectData(html);
+            document.querySelector('#data_collector_output').innerText = JSON.stringify(output, null, 2);
+        }
+
+        const collectBtn = document.querySelector('#collectBtn');
+        collectBtn.addEventListener('click', collectData);
+    </script>
+</head>
+<body>
+        <h2>Data collector</h2>
+        <!-- <label for="htmlinput">Add html snippet.</label><br>
+        <input name="htmlinput" id="htmlinput"></input><br> -->
+        <button type="button" id="collectBtn">Collect data</button>
+        <pre id="data_collector_output"></pre>
+        <my-element>
+            <div slot="main">This is a custom element</div>
+            <p>with some content</p>
+        </my-element>
+</body>
+</html>

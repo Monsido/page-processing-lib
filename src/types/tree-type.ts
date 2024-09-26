@@ -1,7 +1,7 @@
 export type TreeType = ElementType;
 
 export type ElementType = {
-    tagName: string,
+    tagName?: string,
     csId?: number,
     attr?: Array<Array<string>>,
     children?: Array<TreeType | TextNodeType>,

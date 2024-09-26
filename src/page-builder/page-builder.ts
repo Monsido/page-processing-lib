@@ -50,7 +50,7 @@ export class PageBuilder {
     private parseElementNode (node: ElementType, cssList: CssKVType): HTMLElement {
         let element: HTMLElement;
         try {
-            element = document.createElement(node.tagName);
+            element = document.createElement(node.tagName || '');
         } catch (error) {
             throw new Error(`TagName: ${error}`);
         }
@@ -89,7 +89,12 @@ export class PageBuilder {
         if (!shadowRootNode) {
             return;
         }
-        const shadowRoot = element.attachShadow({ mode: 'open' });
+        let shadowRoot: ShadowRoot;
+        try {
+            shadowRoot = element.attachShadow({ mode: 'open' });
+        } catch (error) {
+            throw new Error(`ShadowRoot: ${error}`);
+        }
         const shadowRootCssList: CssKVType = {};
         this.appendChildren(shadowRoot, shadowRootCssList, shadowRootNode.children);
         const styles = this.buildStyle(shadowRootCssList);
