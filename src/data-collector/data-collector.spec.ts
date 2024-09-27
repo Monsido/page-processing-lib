@@ -20,7 +20,7 @@ describe('DataCollector', () => {
             html.innerHTML = '<head></head><body><div>test</div></body>';
         });
 
-        const expectedTree = { 'attr': [], 'children': [{ 'attr': [], 'csId': 1, 'tagName': 'HEAD' }, { 'attr': [], 'children': [{ 'attr': [], 'children': [{ 'text': 'test' }], 'csId': 3, 'tagName': 'DIV' }], 'csId': 2, 'tagName': 'BODY' }], 'csId': 0, 'tagName': 'HTML' };
+        const expectedTree = { 'a': [], 'c': [{ 'a': [], 'ci': 1, 'tn': 'HEAD' }, { 'a': [], 'c': [{ 'a': [], 'c': [{ 't': 'test' }], 'ci': 3, 'tn': 'DIV' }], 'ci': 2, 'tn': 'BODY' }], 'ci': 0, 'tn': 'HTML' };
         const expectedCss = ['visibility:visible;', 'display:none;', 'margin:8px;display:block;', 'display:block;'];
 
         it('should collect HTML as tree', async () => {
@@ -53,10 +53,10 @@ describe('DataCollector', () => {
 
         it('elements with the same styles should have the same csId', async () => {
             const result = await dataCollector.collectData(html);
-            const elements = (result.tree.children as TreeType[])[1].children as TreeType[];
+            const elements = (result.tree.c as TreeType[])[1].c as TreeType[];
 
-            expect(elements[1].csId).toEqual(3);
-            expect(elements[3].csId).toEqual(3);
+            expect(elements[1].ci).toEqual(3);
+            expect(elements[3].ci).toEqual(3);
         });
 
         it('same styles are added only once', async () => {
@@ -129,14 +129,14 @@ describe('DataCollector', () => {
         it('should collect attributes in the correct order - one element', async () => {
             const result = await dataCollector.collectData(html);
             expect(
-                ((result.tree.children as TreeType[])[1].children as TreeType[])[1].attr,
+                ((result.tree.c as TreeType[])[1].c as TreeType[])[1].a,
             ).toEqual([['hidden', ''], ['style', 'padding:2px'], ['id', 'testDiv']]);
         });
 
         it('should collect attributes in the correct order - another element', async () => {
             const result = await dataCollector.collectData(html);
             expect(
-                ((result.tree.children as TreeType[])[1].children as TreeType[])[3].attr,
+                ((result.tree.c as TreeType[])[1].c as TreeType[])[3].a,
             ).toEqual([['style', 'padding:2px'], ['id', 'testDiv'], ['hidden', '']]);
         });
 
