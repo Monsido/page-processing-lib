@@ -49,7 +49,7 @@ tree: Element = { // Tree of nodes
     tn?: string; // (Tag name)
     ci?: number; // (computed style id)
     a?: Array<Array<string>>;  // (attributes) [[‘font-size’, ‘17px’], [‘font-family’, ‘Arial’]] 
-    c?: Array<Element | { text: string }>;  // (children) contains elements OR textNodes
+    c?: Array<Element | { t: string }>;  // (children) contains elements OR textNodes
     sr?: { // (ShadowRoot)
         {
             tn?: string,
@@ -84,7 +84,7 @@ Example
                         ],
                         "c": [
                             {
-                                text: "Hello!"
+                                "t": "Hello!"
                             }
                         ]   
                     },
@@ -97,7 +97,7 @@ Example
                         "sr": {
                             "c": [
                                 {
-                                    "text": "How are you doing?"
+                                    "t": "How are you doing?"
                                 }
                             ]
                         }
