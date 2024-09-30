@@ -60,7 +60,8 @@ tree: Element = { // Tree of nodes
         }
     }
 }
-css: Array<string> // CSS data the 0-entry contains the default CS
+css: Array<string>; // CSS data the 0-entry contains the default CS
+v: string; // Library version
 ```
 Example
 ```json 
@@ -112,6 +113,7 @@ Example
         "padding-top: 15px;font-size: 15px !important;", // ci1
         "color: rgb(153, 153, 153);", // ci2
         …
-    ]
+    ],
+    "v: "1.0.0",
 }
 ```
