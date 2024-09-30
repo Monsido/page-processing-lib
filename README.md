@@ -115,17 +115,3 @@ Example
     ]
 }
 ```
-
-
-## Snippets
-Collecting CS
-```js 
-(() => {
-    const styleObj = window.getComputedStyle(document.querySelectorAll('a')[1]);
-    console.log(styleObj.length);
-    for (let i = styleObj.length; i--; ) {
-        const nameString = styleObj[i];
-        console.log(nameString + ' :  ' + styleObj.getPropertyValue(nameString) + styleObj.getPropertyPriority(nameString)) + ';';
-      }
-})();
-```
