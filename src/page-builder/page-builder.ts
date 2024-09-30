@@ -38,10 +38,10 @@ export class PageBuilder {
     }
 
     private traverseTree (node: ElementType | TextNodeType, cssList: CssKVType): Node {
-        if ('tagName' in node) {
+        if ('tn' in node) {
             return this.parseElementNode(node, cssList);
         }
-        if ('text' in node) {
+        if ('t' in node) {
             return this.parseTextNode(node as TextNodeType);
         }
         throw new Error('NodeType: Unknown node type');
@@ -50,20 +50,20 @@ export class PageBuilder {
     private parseElementNode (node: ElementType, cssList: CssKVType): HTMLElement {
         let element: HTMLElement;
         try {
-            element = document.createElement(node.tagName || '');
+            element = document.createElement(node.tn || '');
         } catch (error) {
             throw new Error(`TagName: ${error}`);
         }
 
-        this.dataCsId(element, cssList, node.csId);
-        this.setAttributes(element, node.attr);
-        this.setShadowDom(element, node.shadowRoot);
-        this.appendChildren(element, cssList, node.children);
+        this.dataCsId(element, cssList, node.ci);
+        this.setAttributes(element, node.a);
+        this.setShadowDom(element, node.sr);
+        this.appendChildren(element, cssList, node.c);
         return element;
     }
 
     private parseTextNode (node: TextNodeType): Text {
-        return document.createTextNode(node.text);
+        return document.createTextNode(node.t);
     }
 
     private dataCsId (element: HTMLElement, cssList: CssKVType, nodeCsId?: number): void {
@@ -96,7 +96,7 @@ export class PageBuilder {
             throw new Error(`ShadowRoot: ${error}`);
         }
         const shadowRootCssList: CssKVType = {};
-        this.appendChildren(shadowRoot, shadowRootCssList, shadowRootNode.children);
+        this.appendChildren(shadowRoot, shadowRootCssList, shadowRootNode.c);
         const styles = this.buildStyle(shadowRootCssList);
         shadowRoot.appendChild(styles);
     }

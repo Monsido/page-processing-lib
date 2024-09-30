@@ -21,23 +21,23 @@ export class DataCollector {
                 const data: TreeType = {};
 
                 if (el.nodeType !== 11) { // not a shadowRoot
-                    data.tagName = (el as HTMLElement).tagName.toUpperCase(),
-                    data.csId = this.processStyles(el as HTMLElement);
-                    data.attr = this.getAttributesList(el as HTMLElement);
+                    data.tn = (el as HTMLElement).tagName.toUpperCase(),
+                    data.ci = this.processStyles(el as HTMLElement);
+                    data.a = this.getAttributesList(el as HTMLElement);
 
                     const shadowRoot = (el as HTMLElement).shadowRoot;
                     if (shadowRoot) {
-                        data.shadowRoot = await this.processTree(shadowRoot);
+                        data.sr = await this.processTree(shadowRoot);
                     }
                 }
 
-                data.children = [];
+                data.c = [];
 
                 const nodes = Array.from(el.childNodes);
                 const lastIndex = nodes.length - 1;
 
-                if (!nodes.length && !data.children.length) {
-                    delete data.children;
+                if (!nodes.length && !data.c.length) {
+                    delete data.c;
                     resolve(data);
                 } else {
                     for (let i = 0; i < nodes.length; i += 1) {
@@ -45,17 +45,17 @@ export class DataCollector {
                         if (node.nodeType === 1) {
                             if (!this.disallowedTagNames.includes((node as HTMLElement).tagName.toUpperCase())) {
                                 const child = await this.processTree(node as HTMLElement);
-                                (data.children as TreeType[]).push(child);
+                                (data.c as TreeType[]).push(child);
                             }
                         } else if (node.nodeType === 3) {
-                            (data.children as TextNodeType[]).push({
-                                text: this.cleanUpText(node.textContent || ''),
+                            (data.c as TextNodeType[]).push({
+                                t: this.cleanUpText(node.textContent || ''),
                             });
                         }
 
                         if (lastIndex === i) {
-                            if (data.children && !data.children.length) {
-                                delete data.children;
+                            if (data.c && !data.c.length) {
+                                delete data.c;
                             }
                             resolve(data);
                         }

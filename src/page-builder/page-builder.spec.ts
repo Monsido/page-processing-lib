@@ -19,14 +19,14 @@ describe('PageBuilder', () => {
 
     describe('Create document fragment from tree and css', () => {
         const tree: TreeType = {
-            tagName: 'div',
-            csId: 0,
-            attr: [['name', 'container']],
-            children: [
+            tn: 'div',
+            ci: 0,
+            a: [['name', 'container']],
+            c: [
                 {
-                    tagName: 'p',
-                    csId: 1,
-                    children: [{ text: 'Hello, World!' }],
+                    tn: 'p',
+                    ci: 1,
+                    c: [{ t: 'Hello, World!' }],
                 },
             ],
         };
@@ -55,10 +55,10 @@ describe('PageBuilder', () => {
 
     it('should set attributes in the right order', () => {
         const tree: TreeType = {
-            tagName: 'div',
-            csId: 0,
-            attr: [['id', 'main'], ['name', 'container']],
-            children: [],
+            tn: 'div',
+            ci: 0,
+            a: [['id', 'main'], ['name', 'container']],
+            c: [],
         };
 
         const css: CssType = ['color: red;'];
@@ -69,10 +69,10 @@ describe('PageBuilder', () => {
 
     it('should throw an error if an attribute has an empty key', () => {
         const tree: TreeType = {
-            tagName: 'div',
-            csId: 0,
-            attr: [['', 'main']],
-            children: [],
+            tn: 'div',
+            ci: 0,
+            a: [['', 'main']],
+            c: [],
         };
 
         const css: CssType = ['color: red;'];
@@ -82,9 +82,9 @@ describe('PageBuilder', () => {
 
     it('should throw an error if an csId is undefined', () => {
         const tree: TreeType = {
-            tagName: 'div',
-            attr: [],
-            children: [],
+            tn: 'div',
+            a: [],
+            c: [],
         };
 
         const css: CssType = ['color: red;'];
@@ -94,9 +94,9 @@ describe('PageBuilder', () => {
 
     it('should throw an error if an element node has an empty tagName', () => {
         const tree: TreeType = {
-            tagName: '',
-            csId: 0,
-            children: [],
+            tn: '',
+            ci: 0,
+            c: [],
         };
 
         const css: CssType = ['color: red;'];
@@ -115,25 +115,25 @@ describe('PageBuilder', () => {
 
     it('should append styles to the head element if it exists', () => {
         const tree: TreeType = {
-            tagName: 'html',
-            attr: [['lang', 'en']],
-            csId: 0,
-            children: [
+            tn: 'html',
+            a: [['lang', 'en']],
+            ci: 0,
+            c: [
                 {
-                    tagName: 'head',
-                    csId: 0,
-                    children: [],
+                    tn: 'head',
+                    ci: 0,
+                    c: [],
                 },
                 {
-                    tagName: 'body',
-                    csId: 0,
-                    attr: [['name', 'container']],
-                    children: [
+                    tn: 'body',
+                    ci: 0,
+                    a: [['name', 'container']],
+                    c: [
                         {
-                            tagName: 'div',
-                            csId: 0,
-                            attr: [['name', 'div']],
-                            children: [],
+                            tn: 'div',
+                            ci: 0,
+                            a: [['name', 'div']],
+                            c: [],
                         },
                     ],
                 },
@@ -147,10 +147,10 @@ describe('PageBuilder', () => {
 
     it('should append styles to the document fragment if head does not exists', () => {
         const tree: TreeType = {
-            tagName: 'div',
-            csId: 0,
-            attr: [['name', 'container']],
-            children: [],
+            tn: 'div',
+            ci: 0,
+            a: [['name', 'container']],
+            c: [],
         };
 
         const css: CssType = ['color: red;'];
@@ -163,18 +163,18 @@ describe('PageBuilder', () => {
     describe('Create shadowDom', () => {
         it('should create shadowDOM and add children', () => {
             const tree: TreeType = {
-                tagName: 'div',
-                csId: 0,
-                shadowRoot: {
-                    children: [
+                tn: 'div',
+                ci: 0,
+                sr: {
+                    c: [
                         {
-                            tagName: 'span',
-                            csId: 1,
-                            children: [{ text: 'Inside Shadow DOM' }],
+                            tn: 'span',
+                            ci: 1,
+                            c: [{ t: 'Inside Shadow DOM' }],
                         },
                     ],
                 },
-                children: [],
+                c: [],
             };
 
             const css: CssType = ['color: red;'];
@@ -187,18 +187,18 @@ describe('PageBuilder', () => {
 
         it('should style tag in shadowDOM for children', () => {
             const tree: TreeType = {
-                tagName: 'div',
-                csId: 0,
-                shadowRoot: {
-                    children: [
+                tn: 'div',
+                ci: 0,
+                sr: {
+                    c: [
                         {
-                            tagName: 'span',
-                            csId: 1,
-                            children: [{ text: 'Inside Shadow DOM' }],
+                            tn: 'span',
+                            ci: 1,
+                            c: [{ t: 'Inside Shadow DOM' }],
                         },
                     ],
                 },
-                children: [],
+                c: [],
             };
 
             const css: CssType = ['color: red;' , 'font-size: 16px;'];
@@ -212,17 +212,17 @@ describe('PageBuilder', () => {
 
     it('should handle nested elements', () => {
         const tree: TreeType = {
-            tagName: 'div',
-            csId: 0,
-            children: [
+            tn: 'div',
+            ci: 0,
+            c: [
                 {
-                    tagName: 'section',
-                    csId: 1,
-                    children: [
+                    tn: 'section',
+                    ci: 1,
+                    c: [
                         {
-                            tagName: 'p',
-                            csId: 2,
-                            children: [{ text: 'Nested paragraph' }],
+                            tn: 'p',
+                            ci: 2,
+                            c: [{ t: 'Nested paragraph' }],
                         },
                     ],
                 },
@@ -236,9 +236,9 @@ describe('PageBuilder', () => {
 
     it('should handle elements with no children', () => {
         const tree: TreeType = {
-            tagName: 'div',
-            csId: 0,
-            children: [],
+            tn: 'div',
+            ci: 0,
+            c: [],
         };
         const css: CssType = ['color: red;'];
         docFragment = pageBuilder.makePage({ tree, css });
