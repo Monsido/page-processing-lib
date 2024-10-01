@@ -2,7 +2,7 @@
   "name": "page-processing-lib",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "repository": "git@github.com:Monsido/page-processing-lib.git",
   "author": "Monsido frontend team",
   "license": "MIT",
