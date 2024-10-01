@@ -4,6 +4,7 @@ export declare class DataCollector {
     private tree;
     private css;
     private disallowedTagNames;
+    private monsidoIframeId;
     private defaultStyles?;
     collectData(html: HTMLElement): Promise<{
         tree: TreeType;

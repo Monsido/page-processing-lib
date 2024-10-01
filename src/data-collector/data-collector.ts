@@ -6,7 +6,8 @@ export class DataCollector {
     private tree: TreeType = {};
     private css: CssType = [];
 
-    private disallowedTagNames = ['STYLE', 'SCRIPT'];
+    private disallowedTagNames = ['STYLE', 'SCRIPT', 'MONSIDO-EXTENSION'];
+    private monsidoIframeId = 'monsido-extension-iframe';
     private defaultStyles?: Record<string, string>;
 
     async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, v: string}> {
@@ -43,7 +44,13 @@ export class DataCollector {
                     for (let i = 0; i < nodes.length; i += 1) {
                         const node = nodes[i];
                         if (node.nodeType === 1) {
-                            if (!this.disallowedTagNames.includes((node as HTMLElement).tagName.toUpperCase())) {
+                            const tagName = (node as HTMLElement).tagName.toUpperCase();
+                            if (
+                                this.disallowedTagNames.includes(tagName) ||
+                                (tagName === 'IFRAME' && (node as HTMLElement).getAttribute('id') === this.monsidoIframeId)
+                            ) {
+                                // do nothing; cannot use 'continue' since need to go until resolve
+                            } else {
                                 const child = await this.processTree(node as HTMLElement);
                                 (data.c as TreeType[]).push(child);
                             }
