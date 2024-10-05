@@ -4,8 +4,8 @@
         "declaration": true,
         "emitDeclarationOnly": true,
         "forceConsistentCasingInFileNames": true,
-        "moduleResolution": "Bundler", // Recommended in TS 5.0+ for applications that use a bundler
-        "target": "ES2023",
+        "moduleResolution": "node", // Recommended in TS 5.0+ for applications that use a bundler
+        "target": "ES2022",
         "strict": true,
         "esModuleInterop": true, // Add this line for Jest compatibility
         "skipLibCheck": true, // Optional: speeds up compilation
