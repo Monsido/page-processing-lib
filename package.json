@@ -7,6 +7,12 @@
     "author": "Monsido frontend team",
     "license": "MIT",
     "private": true,
+    "exports": {
+        ".": {
+            "require": "dist/index.csj.js",
+            "import": "dist/index.js"
+        }
+    },
     "scripts": {
         "build": "node build/build.mjs",
         "serve": "node build/serve.mjs",
