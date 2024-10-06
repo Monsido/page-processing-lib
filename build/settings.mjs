@@ -1,9 +1,10 @@
 export function createBuildSettings(options) {
+    console.log('options', options);
     return {
         entryPoints: ['./src/index.ts'],
         tsconfig: 'tsconfig.json',
         loader: { '.ts': 'ts' }, // Use TypeScript loader
-        format: 'cjs', // Output format is ES module
+        format: 'esm', // Output format is ES module
         bundle: true,
         ...options,
     };
