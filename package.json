@@ -9,7 +9,6 @@
     "private": true,
     "scripts": {
         "build": "node build/build.mjs",
-        "build:cjs": "BUILD_FORMAT=cjs yarn build",
         "serve": "node build/serve.mjs",
         "lint": "eslint src --ext .ts",
         "test": "jest",

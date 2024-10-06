@@ -20,16 +20,18 @@ execSync('tsc --project tsconfig.json', { stdio: 'inherit' });
 
 // Run esbuild to bundle the library
 const defaultSettings = {
-    minify: true,
+    minify: false,
     outfile: 'dist/index.js',
 };
-
-const settings = process.env.BUILD_FORMAT_CJS
-    ? createBuildSettings({
-          ...defaultSettings,
-          format: `${process.env.BUILD_FORMAT_CJS}`,
-      })
-    : createBuildSettings({
-          ...defaultSettings,
-      });
-esbuild.build(settings);
+const esmSettings = createBuildSettings({
+    minify: true,
+    outfile: 'dist/index.js',
+    format: 'esm',
+});
+const cjsSettings = createBuildSettings({
+    minify: true,
+    outfile: 'dist/index.csj.js',
+    format: 'cjs',
+});
+esbuild.build(esmSettings).catch(() => process.exit(1));
+esbuild.build(cjsSettings).catch(() => process.exit(1));
