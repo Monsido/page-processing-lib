@@ -19,17 +19,16 @@ cleanDist();
 execSync('tsc --project tsconfig.json', { stdio: 'inherit' });
 
 // Run esbuild to bundle the library
-const defaultSettings = {
-    minify: false,
-    outfile: 'dist/index.js',
+const commonSettings = {
+    minify: true,
 };
 const esmSettings = createBuildSettings({
-    minify: true,
+    ...commonSettings,
     outfile: 'dist/index.js',
     format: 'esm',
 });
 const cjsSettings = createBuildSettings({
-    minify: true,
+    ...commonSettings,
     outfile: 'dist/index.csj.js',
     format: 'cjs',
 });
