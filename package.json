@@ -9,8 +9,8 @@
     "private": true,
     "exports": {
         ".": {
-            "require": "dist/index.csj.js",
-            "import": "dist/index.js"
+            "require": "./dist/index.csj.js",
+            "import": "./dist/index.js"
         }
     },
     "scripts": {
