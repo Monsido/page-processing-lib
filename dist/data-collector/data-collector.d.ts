@@ -3,9 +3,11 @@ import { TreeType } from '../types/tree-type';
 export declare class DataCollector {
     private tree;
     private css;
+    private readonly version;
     private disallowedTagNames;
     private monsidoIframeId;
     private defaultStyles?;
+    constructor(version: string);
     collectData(html: HTMLElement): Promise<{
         tree: TreeType;
         css: CssType;
