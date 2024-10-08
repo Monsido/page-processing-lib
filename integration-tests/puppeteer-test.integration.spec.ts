@@ -1,25 +1,10 @@
-/**
- * @jest-environment node
- */
-
 import { launch, PuppeteerLaunchOptions } from 'puppeteer';
-import { DataCollector } from '../src';
-import { PageBuilder } from '../src';
-import { TreeType } from '../src/types/tree-type';
-import { CssType } from '../src/types/css-type';
-import { version } from '../src/info.json';
+import { DataCollector, PageBuilder, version } from '../src';
+import { CssType, TreeType } from '../src/types';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
-
-declare global {
-    interface Window {
-        dataCollector: DataCollector;
-        pageBuilder: PageBuilder;
-        infoVersion: string;
-    }
-}
+import './global';
 
 expect.extend({ toMatchImageSnapshot });
-jest.setTimeout(10000);
 
 describe('Puppeteer test', () => {
     const pupArgs = [
@@ -87,10 +72,14 @@ describe('Puppeteer test', () => {
                     tree,
                     css,
                 );
+                // await newPage.evaluate(() => {
+                //     debugger;
+                // });
+                // await newPage.waitForFunction('false');
 
                 const image = await newPage.screenshot();
                 expect(image).toMatchImageSnapshot({
-                    failureThreshold: 0.03,
+                    failureThreshold: 0.01,
                     failureThresholdType: 'percent',
                 });
             } catch (e) {

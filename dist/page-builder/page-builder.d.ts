@@ -1,5 +1,4 @@
-import { CssType } from '../types/css-type';
-import { TreeType } from '../types/tree-type';
+import { TreeType, CssType } from '../types';
 export declare class PageBuilder {
     css: CssType;
     makePage(content: {

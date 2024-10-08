@@ -3,7 +3,6 @@ import { createBuildSettings } from './settings.mjs';
 import { execSync } from 'child_process';
 import { existsSync, mkdirSync, rmSync, readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
-import fs from 'fs';
 
 // Function to clean the dist directory
 function cleanDist() {
