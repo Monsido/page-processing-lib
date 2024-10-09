@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, rmSync, readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
 // Function to clean the dist directory
-function cleanDist() {
+function cleanDist () {
     const distPath = resolve('./dist');
     if (existsSync(distPath)) {
         rmSync(distPath, { recursive: true, force: true });
@@ -13,7 +13,7 @@ function cleanDist() {
     mkdirSync(distPath);
 }
 
-function syncPackageVersion() {
+function syncPackageVersion () {
     const packageJsonPath = resolve('./package.json');
     const infoJsonPath = resolve('./src/info.json');
 
@@ -28,7 +28,7 @@ function syncPackageVersion() {
     }
 }
 
-// Call the function to update the version
+// sync version to the src/info json
 syncPackageVersion();
 // Clean the dist directory
 cleanDist();
