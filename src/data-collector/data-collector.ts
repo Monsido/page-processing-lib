@@ -10,11 +10,11 @@ export class DataCollector {
     private disallowedTagNames = ['STYLE', 'SCRIPT'];
     private defaultStyles?: Record<string, string>;
 
-    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:HTMLElement, v: string}> {
+    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string}> {
         this.setDefaultComputedStyles();
         this.removeExtensionElements(html);
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, html: html, v: packageJson.version };
+        return { tree: this.tree, css: this.css, html: html.outerHTML, v: packageJson.version };
     }
 
     private removeExtensionElements (html: HTMLElement): void {
