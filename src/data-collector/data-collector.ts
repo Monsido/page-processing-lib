@@ -19,9 +19,11 @@ export class DataCollector {
 
     private removeExtensionElements (html: HTMLElement): void {
         this.extensionElements.forEach(selector => {
-            const element = html.querySelector(selector);
-            if (element) {
-                element.remove();
+            const elements = html.querySelectorAll(selector);
+            if (elements) {
+                elements.forEach(element => {
+                    element.remove();
+                });
             }
         });
     }
