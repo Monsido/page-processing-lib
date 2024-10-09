@@ -5,21 +5,21 @@ import packageJson from '../../package.json';
 export class DataCollector {
     private tree: TreeType = {};
     private css: CssType = [];
-
-    private extensionElements = ['IFRAME#monsido-extension-iframe', 'MONSIDO-EXTENSION'];
-    private disallowedTagNames = ['STYLE', 'SCRIPT'];
+    private disallowedTagNames = ['STYLE', 'SCRIPT', 'MONSIDO-EXTENSION'];
+    private monsidoIframeId = 'monsido-extension-iframe';
     private defaultStyles?: Record<string, string>;
 
     async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string}> {
         this.setDefaultComputedStyles();
         const newHtml = this.removeExtensionElements(html);
-        this.tree = await this.processTree(newHtml);
+        this.tree = await this.processTree(html);
         return { tree: this.tree, css: this.css, html: newHtml.outerHTML, v: packageJson.version };
     }
 
     private removeExtensionElements (html: HTMLElement): HTMLElement {
         const htmlClone = html.cloneNode(true) as HTMLElement;
-        this.extensionElements.forEach(selector => {
+        const extensionElements = [`IFRAME#${this.monsidoIframeId}`, this.disallowedTagNames[2]];
+        extensionElements.forEach(selector => {
             const elements = htmlClone.querySelectorAll(selector);
             if (elements) {
                 elements.forEach(element => {
@@ -60,7 +60,8 @@ export class DataCollector {
                         if (node.nodeType === 1) {
                             const tagName = (node as HTMLElement).tagName.toUpperCase();
                             if (
-                                this.disallowedTagNames.includes(tagName)
+                                this.disallowedTagNames.includes(tagName) ||
+                                (tagName === 'IFRAME' && (node as HTMLElement).getAttribute('id') === this.monsidoIframeId)
                             ) {
                                 // do nothing; cannot use 'continue' since need to go until resolve
                             } else {
