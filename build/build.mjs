@@ -46,7 +46,7 @@ const esmSettings = createBuildSettings({
 });
 const cjsSettings = createBuildSettings({
     ...commonSettings,
-    outfile: 'dist/index.csj.js',
+    outfile: 'dist/index.cjs.js',
     format: 'cjs',
 });
 esbuild.build(esmSettings).catch(() => process.exit(1));
