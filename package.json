@@ -18,7 +18,9 @@
         "version": "yarn version"
     },
     "files": [
-        "dist/**/*"
+        "dist/**/*.js",
+        "dist/**/*.json",
+        "dist/**/*.d.ts"
     ],
     "exports": {
         ".": {
