@@ -6,14 +6,24 @@ export class DataCollector {
     private tree: TreeType = {};
     private css: CssType = [];
 
-    private disallowedTagNames = ['STYLE', 'SCRIPT', 'MONSIDO-EXTENSION'];
-    private monsidoIframeId = 'monsido-extension-iframe';
+    private extensionElements = ['IFRAME#monsido-extension-iframe', 'MONSIDO-EXTENSION'];
+    private disallowedTagNames = ['STYLE', 'SCRIPT'];
     private defaultStyles?: Record<string, string>;
 
-    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, v: string}> {
+    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:HTMLElement, v: string}> {
         this.setDefaultComputedStyles();
+        this.removeExtensionElements(html);
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, v: packageJson.version };
+        return { tree: this.tree, css: this.css, html: html, v: packageJson.version };
+    }
+
+    private removeExtensionElements (html: HTMLElement): void {
+        this.extensionElements.forEach(selector => {
+            const element = html.querySelector(selector);
+            if (element) {
+                element.remove();
+            }
+        });
     }
 
     private processTree (el: HTMLElement | ShadowRoot): Promise<TreeType> {
@@ -46,8 +56,7 @@ export class DataCollector {
                         if (node.nodeType === 1) {
                             const tagName = (node as HTMLElement).tagName.toUpperCase();
                             if (
-                                this.disallowedTagNames.includes(tagName) ||
-                                (tagName === 'IFRAME' && (node as HTMLElement).getAttribute('id') === this.monsidoIframeId)
+                                this.disallowedTagNames.includes(tagName)
                             ) {
                                 // do nothing; cannot use 'continue' since need to go until resolve
                             } else {
