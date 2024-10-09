@@ -12,20 +12,22 @@ export class DataCollector {
 
     async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string}> {
         this.setDefaultComputedStyles();
-        this.removeExtensionElements(html);
-        this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, html: html.outerHTML, v: packageJson.version };
+        const newHtml = this.removeExtensionElements(html);
+        this.tree = await this.processTree(newHtml);
+        return { tree: this.tree, css: this.css, html: newHtml.outerHTML, v: packageJson.version };
     }
 
-    private removeExtensionElements (html: HTMLElement): void {
+    private removeExtensionElements (html: HTMLElement): HTMLElement {
+        const htmlClone = html.cloneNode(true) as HTMLElement;
         this.extensionElements.forEach(selector => {
-            const elements = html.querySelectorAll(selector);
+            const elements = htmlClone.querySelectorAll(selector);
             if (elements) {
                 elements.forEach(element => {
                     element.remove();
                 });
             }
         });
+        return htmlClone;
     }
 
     private processTree (el: HTMLElement | ShadowRoot): Promise<TreeType> {
