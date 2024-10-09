@@ -1,4 +1,3 @@
-import { launch, PuppeteerLaunchOptions } from 'puppeteer';
 import { DataCollector, PageBuilder, version } from '../src';
 import { CssType, TreeType } from '../src/types';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
@@ -7,58 +6,25 @@ import './global';
 expect.extend({ toMatchImageSnapshot });
 
 describe('Puppeteer test', () => {
-    const pupArgs = [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--disable-gpu',
-        '--no-first-run',
-        '--no-startup-window',
-        '--no-zygote',
-        // Set persistent Window Size for Page
-        `--window-size=1366,768`,
-        '--disable-infobars',
-        '--window-position=0,0',
-        '--ignore-certificate-errors',
-        '--ignore-certificate-errors-spki-list',
-        '--disable-prompt-on-repost',
-        '--incognito',
-    ];
-
-    const processedOptions: PuppeteerLaunchOptions = Object.assign(
-        {},
-        {
-            headless: false,
-            args: pupArgs,
-            waitForInitialPage: false,
-            // Set default viewport for page
-            defaultViewport: {
-                width: 1366,
-                height: 768,
-            },
-        },
-    );
     beforeEach(() => {});
 
     describe('Create browser, extract page data and reassemble it', () => {
-        it('should be created', async () => {
-            const browser = await launch(processedOptions);
+        it('rendered page should be the same as the reconstructed page after using the page-processing-lib', async () => {
             try {
-                const context = await browser.createBrowserContext();
+                const context = await globalThis.__BROWSER_GLOBAL__.createBrowserContext();
                 const page = await context.newPage();
-                page.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
+                await page.setViewport({ width: 1366, height: 768 });
                 await page.goto('https://test-page-8.sidomon.com');
-                const { tree, css } = await page.evaluate(async (dc: string, infoVersion: string) => {
+                const { tree, css } = await page.evaluate(async (dc: string, infoVersion: string): Promise<{css: CssType, tree: TreeType, v: string}> => {
                     window.infoVersion = infoVersion;
                     eval('window.DataCollector = ' + dc);
                     eval('window.dataCollector = new window.DataCollector(window.infoVersion)');
                     return await window.dataCollector.collectData(window.document.documentElement);
                 }, DataCollector.toString(), version);
-
                 await page.close();
+
                 const newPage = await context.newPage();
-                newPage.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
+                await newPage.setViewport({ width: 1366, height: 768 });
                 await newPage.evaluate(
                     (pb: string, treeIn: TreeType, cssIn: CssType) => {
                         eval('window.PageBuilder = ' + pb);
@@ -72,6 +38,7 @@ describe('Puppeteer test', () => {
                     tree,
                     css,
                 );
+                // this stops the browser from closing to inspect more closely
                 // await newPage.evaluate(() => {
                 //     debugger;
                 // });
@@ -84,8 +51,6 @@ describe('Puppeteer test', () => {
                 });
             } catch (e) {
                 console.log('error', e);
-            } finally {
-                await browser?.close();
             }
         });
     });
