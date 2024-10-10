@@ -5,15 +5,30 @@ import packageJson from '../../package.json';
 export class DataCollector {
     private tree: TreeType = {};
     private css: CssType = [];
-
     private disallowedTagNames = ['STYLE', 'SCRIPT', 'MONSIDO-EXTENSION'];
     private monsidoIframeId = 'monsido-extension-iframe';
     private defaultStyles?: Record<string, string>;
 
-    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, v: string}> {
+    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string}> {
         this.setDefaultComputedStyles();
+        const newHtml = this.removeExtensionElements(html);
+        const cleanedHtml = this.cleanUpText(newHtml.outerHTML);
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, v: packageJson.version };
+        return { tree: this.tree, css: this.css, html: cleanedHtml, v: packageJson.version };
+    }
+
+    private removeExtensionElements (html: HTMLElement): HTMLElement {
+        const htmlClone = html.cloneNode(true) as HTMLElement;
+        const extensionElements = [`IFRAME#${this.monsidoIframeId}`, this.disallowedTagNames[2]];
+        extensionElements.forEach(selector => {
+            const elements = htmlClone.querySelectorAll(selector);
+            if (elements) {
+                elements.forEach(element => {
+                    element.remove();
+                });
+            }
+        });
+        return htmlClone;
     }
 
     private processTree (el: HTMLElement | ShadowRoot): Promise<TreeType> {
