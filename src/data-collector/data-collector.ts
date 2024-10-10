@@ -12,8 +12,9 @@ export class DataCollector {
     async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string}> {
         this.setDefaultComputedStyles();
         const newHtml = this.removeExtensionElements(html);
+        const cleanedHtml = this.cleanUpText(newHtml.outerHTML);
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, html: newHtml.outerHTML, v: packageJson.version };
+        return { tree: this.tree, css: this.css, html: cleanedHtml, v: packageJson.version };
     }
 
     private removeExtensionElements (html: HTMLElement): HTMLElement {
