@@ -9,8 +9,10 @@ export declare class DataCollector {
     collectData(html: HTMLElement): Promise<{
         tree: TreeType;
         css: CssType;
+        html: string;
         v: string;
     }>;
+    private removeExtensionElements;
     private processTree;
     private setDefaultComputedStyles;
     private processStyles;
