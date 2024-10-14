@@ -3,3 +3,4 @@ node_modules/
 www/index.js
 www/index.js.map
 .idea
+integration-tests/__image_snapshots__/

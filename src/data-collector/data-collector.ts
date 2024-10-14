@@ -1,22 +1,20 @@
 import { TextNodeType, TreeType, CssType } from '../types';
+import { version } from '../../package.json';
 
 export class DataCollector {
     private tree: TreeType = {};
     private css: CssType = [];
-    private readonly version: string;
 
     private disallowedTagNames = ['STYLE', 'SCRIPT', 'MONSIDO-EXTENSION'];
     private monsidoIframeId = 'monsido-extension-iframe';
     private defaultStyles?: Record<string, string>;
 
-    constructor (version: string) {
-        this.version = version;
-    }
+    constructor () {}
 
-    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, v: string}> {
+    async collectData (html: HTMLElement):Promise<{tree:TreeType, css:CssType, v: string}> {
         this.setDefaultComputedStyles();
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, v: this.version };
+        return { tree: this.tree, css: this.css, v: version ?? '' };
     }
 
     private processTree (el: HTMLElement | ShadowRoot): Promise<TreeType> {
