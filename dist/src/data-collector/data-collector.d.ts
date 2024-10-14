@@ -1,11 +1,10 @@
-import { TreeType, CssType } from '../types';
+import { CssType, TreeType } from '../types';
 export declare class DataCollector {
     private tree;
     private css;
     private disallowedTagNames;
     private monsidoIframeId;
     private defaultStyles?;
-    constructor();
     collectData(html: HTMLElement): Promise<{
         tree: TreeType;
         css: CssType;
