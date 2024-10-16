@@ -8,8 +8,7 @@
     "license": "MIT",
     "private": true,
     "scripts": {
-        "build": "node build/build.mjs && yarn copy:info",
-        "copy:info": "cp src/info.json dist/info.json",
+        "build": "node build/build.mjs",
         "serve": "node build/serve.mjs",
         "lint": "eslint src --ext .ts",
         "test": "jest",
