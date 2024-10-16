@@ -3,8 +3,7 @@
  * @jest-environment jsdom
  */
 import { PageBuilder } from './page-builder';
-import { CssType } from '../types/css-type';
-import { TreeType } from '../types/tree-type';
+import { TreeType, CssType } from '../types';
 
 describe('PageBuilder', () => {
     let pageBuilder: PageBuilder;

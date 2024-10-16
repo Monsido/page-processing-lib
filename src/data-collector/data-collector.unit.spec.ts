@@ -1,12 +1,11 @@
-import { TreeType } from '../types/tree-type';
+import { TreeType } from '../types';
 import { DataCollector } from './data-collector';
-import { version } from '../info.json';
 
 describe('DataCollector', () => {
     let dataCollector: DataCollector;
 
     beforeEach(() => {
-        dataCollector = new DataCollector(version);
+        dataCollector = new DataCollector();
     });
 
     it('DataCollector instantiated', () => {

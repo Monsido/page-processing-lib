@@ -1,8 +1,7 @@
 import { CssType, TreeType } from '../src/types';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 import '../src/types/global';
-import { ElementHandle, Page } from 'puppeteer';
-import * as path from 'node:path';
+import { ElementHandle } from 'puppeteer';
 
 expect.extend({ toMatchImageSnapshot });
 
@@ -26,8 +25,10 @@ describe('Puppeteer test', () => {
                 const { css, tree } = await page.evaluate(async (): Promise<{tree: TreeType, css: CssType}> => {
                     return await window.dataCollector.collectData(window.document.documentElement);
                 });
+                await context.close();
 
-                const newPage = await context.newPage();
+                const newContext = await globalThis.__BROWSER_GLOBAL__.createBrowserContext();
+                const newPage = await newContext.newPage();
                 await newPage.setViewport({ width: 1366, height: 768 });
                 const injectedScriptNewPage: ElementHandle = await newPage.addScriptTag({ path: require.resolve(pathToScript) });
                 await injectedScriptNewPage.evaluate((domEl) => {
@@ -45,10 +46,8 @@ describe('Puppeteer test', () => {
                 );
 
                 const image = await newPage.screenshot();
-                expect(image).toMatchImageSnapshot({
-                    failureThreshold: 0.01,
-                    failureThresholdType: 'percent',
-                });
+                await newContext.close();
+                expect(image).toMatchImageSnapshot();
             } catch (e) {
                 console.log('error', e);
             }

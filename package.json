@@ -18,15 +18,8 @@
     },
     "files": [
         "dist/**/*.js",
-        "dist/**/*.json",
         "dist/**/*.d.ts"
     ],
-    "exports": {
-        ".": {
-            "require": "./dist/index.cjs.js",
-            "import": "./dist/index.js"
-        }
-    },
     "jest": {
         "projects": [
             "<rootDir>/jest.unit.config.js",
