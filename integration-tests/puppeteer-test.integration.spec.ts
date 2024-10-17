@@ -11,7 +11,7 @@ describe('Puppeteer test', () => {
     describe('Create browser, extract page data and reassemble it', () => {
         it('rendered page should be the same as the reconstructed page after using the page-processing-lib', async () => {
             try {
-                const context = await globalThis.__BROWSER_GLOBAL__.createBrowserContext();
+                const context = await globalThis.__BROWSER_GLOBAL__.createIncognitoBrowserContext()
                 const page = await context.newPage();
                 await page.setViewport({ width: 1366, height: 768 });
                 await page.goto('https://test-page-8.sidomon.com');
@@ -27,7 +27,7 @@ describe('Puppeteer test', () => {
                 });
                 await context.close();
 
-                const newContext = await globalThis.__BROWSER_GLOBAL__.createBrowserContext();
+                const newContext = await globalThis.__BROWSER_GLOBAL__.createIncognitoBrowserContext();
                 const newPage = await newContext.newPage();
                 await newPage.setViewport({ width: 1366, height: 768 });
                 const injectedScriptNewPage: ElementHandle = await newPage.addScriptTag({ path: require.resolve(pathToScript) });

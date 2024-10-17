@@ -26,7 +26,7 @@ const pupArgs = [
 const processedOptions = Object.assign(
     {},
     {
-        headless: false,
+        headless: 'new',
         args: pupArgs,
         waitForInitialPage: false,
         ignoreDefaultArgs: ['--hide-scrollbars'],

@@ -22,7 +22,7 @@ execSync('tsc --project tsconfig.json', { stdio: 'inherit' });
 const commonSettings = {
     minify: true,
 };
-const esmSettings = createBuildSettings({
+const settings = createBuildSettings({
     ...commonSettings,
     outfile: 'dist/index.js',
     entryPoints: ['./src/index.ts'],
@@ -32,5 +32,5 @@ const scriptBuildSettings  = createBuildSettings({
     outfile: 'dist/index.script.js',
     entryPoints: ['./src/index.script.ts'],
 });
-esbuild.build(esmSettings).catch(() => process.exit(1));
+esbuild.build(settings).catch(() => process.exit(1));
 esbuild.build(scriptBuildSettings).catch(() => process.exit(1));
