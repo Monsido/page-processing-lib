@@ -11,7 +11,7 @@ describe('Puppeteer test', () => {
     describe('Create browser, extract page data and reassemble it', () => {
         it('rendered page should be the same as the reconstructed page after using the page-processing-lib', async () => {
             try {
-                const context = await globalThis.__BROWSER_GLOBAL__.createIncognitoBrowserContext()
+                const context = await globalThis.__BROWSER_GLOBAL__.createIncognitoBrowserContext();
                 const page = await context.newPage();
                 await page.setViewport({ width: 1366, height: 768 });
                 await page.goto('https://test-page-8.sidomon.com');
@@ -22,7 +22,7 @@ describe('Puppeteer test', () => {
                     domEl.remove();
                 });
 
-                const { css, tree } = await page.evaluate(async (): Promise<{tree: TreeType, css: CssType}> => {
+                const { css, tree } = await page.evaluate(async (): Promise<{ tree: TreeType; css: CssType }> => {
                     return await window.dataCollector.collectData(window.document.documentElement);
                 });
                 await context.close();
@@ -30,7 +30,9 @@ describe('Puppeteer test', () => {
                 const newContext = await globalThis.__BROWSER_GLOBAL__.createIncognitoBrowserContext();
                 const newPage = await newContext.newPage();
                 await newPage.setViewport({ width: 1366, height: 768 });
-                const injectedScriptNewPage: ElementHandle = await newPage.addScriptTag({ path: require.resolve(pathToScript) });
+                const injectedScriptNewPage: ElementHandle = await newPage.addScriptTag({
+                    path: require.resolve(pathToScript),
+                });
                 await injectedScriptNewPage.evaluate((domEl) => {
                     domEl.remove();
                 });
@@ -42,7 +44,7 @@ describe('Puppeteer test', () => {
                         document.close();
                     },
                     tree,
-                    css,
+                    css
                 );
 
                 const image = await newPage.screenshot();
