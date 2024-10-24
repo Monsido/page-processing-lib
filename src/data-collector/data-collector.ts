@@ -1,5 +1,4 @@
-import { CssType } from '../types/css-type';
-import { TextNodeType, TreeType } from '../types/tree-type';
+import { CssType, TreeType, TextNodeType } from '../types';
 import packageJson from '../../package.json';
 
 export class DataCollector {

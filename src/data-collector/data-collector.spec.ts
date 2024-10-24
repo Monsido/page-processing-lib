@@ -1,4 +1,4 @@
-import { TreeType } from '../types/tree-type';
+import { TreeType } from '../types';
 import { DataCollector } from './data-collector';
 
 describe('DataCollector', () => {

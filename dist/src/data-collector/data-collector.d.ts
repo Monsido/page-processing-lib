@@ -1,5 +1,4 @@
-import { CssType } from '../types/css-type';
-import { TreeType } from '../types/tree-type';
+import { CssType, TreeType } from '../types';
 export declare class DataCollector {
     private tree;
     private css;

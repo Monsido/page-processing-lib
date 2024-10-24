@@ -2,3 +2,7 @@ node_modules/
 .vscode/
 www/index.js
 www/index.js.map
+.idea
+.DS_Store
+integration-tests/screenshots/
+integration-tests/__image_snapshots__/

@@ -1,5 +1,4 @@
-import { CssType } from '../types/css-type';
-import { ElementType, ShadowRootType, TextNodeType, TreeType } from '../types/tree-type';
+import { ElementType, ShadowRootType, TextNodeType, TreeType, CssType } from '../types';
 
 type CssKVType = Record<string, string>;
 export class PageBuilder {
