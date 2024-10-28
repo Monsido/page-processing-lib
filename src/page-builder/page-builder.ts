@@ -28,7 +28,7 @@ export class PageBuilder {
     private buildStyle (css: CssKVType): HTMLStyleElement {
         const styleElement = document.createElement('style');
         let styles = '';
-        styles += `html {${css[0]}} `;
+        styles += `* {${css[0]}} `;
         Object.keys(css || {}).forEach((key: string) => {
             styles += `[data-cs-${key}] {${css[parseInt(key)]}} `;
         });
