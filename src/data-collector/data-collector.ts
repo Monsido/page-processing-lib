@@ -87,11 +87,8 @@ export class DataCollector {
     }
 
     private setDefaultComputedStyles (): void {
-        const defaultElement = document.createElement(`acq-default-element-${Date.now()}`);
-        document.body.appendChild(defaultElement);
-        this.defaultStyles = this.getStylesAsRecord(defaultElement);
+        this.defaultStyles = this.getStylesAsRecord(document.documentElement);
         this.css.push(this.collectStyles(this.defaultStyles));
-        document.body.removeChild(defaultElement);
     }
 
     private processStyles (el: HTMLElement): number | undefined {
