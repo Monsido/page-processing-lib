@@ -19,7 +19,12 @@ export class DataCollector {
 
     private removeExtensionElements (html: HTMLElement): HTMLElement {
         const htmlClone = html.cloneNode(true) as HTMLElement;
-        const extensionElements = [`IFRAME#${this.monsidoIframeId}`, this.disallowedTagNames[2]];
+        const extensionElements = [
+            `IFRAME#${this.monsidoIframeId}`,
+            `[data-monsido-extension-id][monsido-extension-version]`,
+            `STYLE#${this.monsidoExtensionRootStyleId}`,
+            this.disallowedTagNames[2],
+        ];
         extensionElements.forEach(selector => {
             const elements = htmlClone.querySelectorAll(selector);
             if (elements) {
