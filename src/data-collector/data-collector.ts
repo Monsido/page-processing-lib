@@ -22,7 +22,7 @@ export class DataCollector {
         const extensionElements = [
             `IFRAME#${this.monsidoIframeId}`,
             `[data-monsido-extension-id][monsido-extension-version]`,
-            `STYLE#${this.monsidoExtensionRootStyleId}`,
+            `style#${this.monsidoExtensionRootStyleId}`,
             this.disallowedTagNames[2],
         ];
         extensionElements.forEach(selector => {

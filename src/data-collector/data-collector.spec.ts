@@ -144,4 +144,27 @@ describe('DataCollector', () => {
 
     });
 
+    describe('Extension elements removal', () => {
+        const html = document.createElement('html');
+        html.innerHTML = `<head></head><body>
+        <div hidden style="padding:2px" id="testDiv">test</div>
+        <div style="padding:2px" id="testDiv" hidden>test</div>
+        <div data-monsido-extension-id="1234" monsido-extension-version="2"></div>
+        <style id="mon-root-filter"></style>
+        </body>`;
+
+        it('should not collect monsido extension elements', async () => {
+            const result = await dataCollector.collectData(html)
+            expect(result.html).not.toContain('<div data-monsido-extension-id="1234" monsido-extension-version="2"')
+        });
+        it('should not collect monsido extension elements', async () => {
+            const result = await dataCollector.collectData(html)
+            expect(result.html).not.toContain('id="mon-root-filter"')
+        });
+        it('should not collect monsido extension elements', async () => {
+            const result = await dataCollector.collectData(html)
+            expect(result.html).not.toContain('data-monsido-extension-id')
+        });
+    })
+
 });
