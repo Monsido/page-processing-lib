@@ -28,7 +28,6 @@ export class PageBuilder {
     private buildStyle (css: CssKVType): HTMLStyleElement {
         const styleElement = document.createElement('style');
         let styles = '';
-        styles += `* {${css[0]}} `;
         Object.keys(css || {}).forEach((key: string) => {
             styles += `[data-cs-${key}] {${css[parseInt(key)]}} `;
         });
@@ -68,6 +67,7 @@ export class PageBuilder {
 
     private dataCsId (element: HTMLElement, cssList: CssKVType, nodeCsId?: number): void {
         if (nodeCsId !== undefined) {
+            element.setAttribute(`data-cs-0`, '');
             element.setAttribute(`data-cs-${nodeCsId.toString()}`, '');
             cssList[nodeCsId] = this.css[nodeCsId];
         } else {

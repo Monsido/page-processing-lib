@@ -36,7 +36,7 @@ describe('PageBuilder', () => {
         });
 
         it('should be created', () => {
-            expect(docFragment.querySelector('div')?.outerHTML).toEqual(`<div data-cs-0="" name="container"><p data-cs-1="">Hello, World!</p></div>`);
+            expect(docFragment.querySelector('div')?.outerHTML).toEqual(`<div data-cs-0="" name="container"><p data-cs-0="" data-cs-1="">Hello, World!</p></div>`);
         });
 
         it('should contain a div with attribute', () => {

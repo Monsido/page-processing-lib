@@ -70,6 +70,8 @@ describe('DataCollector', () => {
 
     describe('Collects default CSS', () => {
         const html = document.createElement('html');
+        const htmlWithChild = document.createElement('html')
+        htmlWithChild.appendChild(document.createElement('body'))
 
         let windowSpy: jest.SpyInstance<unknown>;
 
@@ -83,7 +85,7 @@ describe('DataCollector', () => {
 
         const fakeComputedStyles: string[] & {getPropertyValue?: (prop: string) => string; el?: HTMLElement} = ['visibility', 'color'];
         fakeComputedStyles.getPropertyValue = (prop: string): string => {
-            const isDefaultStylesElement = fakeComputedStyles.el?.tagName.startsWith('ACQ-DEFAULT-ELEMENT');
+            const isDefaultStylesElement = fakeComputedStyles.el?.tagName === 'HTML';
             switch (prop) {
                 case 'visibility':
                     return 'visible';
@@ -112,7 +114,7 @@ describe('DataCollector', () => {
                     return fakeComputedStyles;
                 },
             );
-            const result = await dataCollector.collectData(html);
+            const result = await dataCollector.collectData(htmlWithChild);
             expect(result.css[1]).toEqual('color:green;');
         });
     });
