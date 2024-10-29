@@ -67,6 +67,7 @@ export class PageBuilder {
 
     private dataCsId (element: HTMLElement, cssList: CssKVType, nodeCsId?: number): void {
         if (nodeCsId !== undefined) {
+            element.setAttribute(`data-cs-0`, '');
             element.setAttribute(`data-cs-${nodeCsId.toString()}`, '');
             cssList[nodeCsId] = this.css[nodeCsId];
         } else {
