@@ -6,6 +6,7 @@ export class DataCollector {
     private css: CssType = [];
     private disallowedTagNames = ['STYLE', 'SCRIPT', 'MONSIDO-EXTENSION'];
     private monsidoIframeId = 'monsido-extension-iframe';
+    private monsidoExtensionRootStyleId = 'mon-root-filter';
     private defaultStyles?: Record<string, string>;
 
     async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string}> {
@@ -58,10 +59,8 @@ export class DataCollector {
                     for (let i = 0; i < nodes.length; i += 1) {
                         const node = nodes[i];
                         if (node.nodeType === 1) {
-                            const tagName = (node as HTMLElement).tagName.toUpperCase();
                             if (
-                                this.disallowedTagNames.includes(tagName) ||
-                                (tagName === 'IFRAME' && (node as HTMLElement).getAttribute('id') === this.monsidoIframeId)
+                                this.isNodeExcluded(node as HTMLElement)
                             ) {
                                 // do nothing; cannot use 'continue' since need to go until resolve
                             } else {
@@ -84,6 +83,27 @@ export class DataCollector {
                 }
             }, 0);
         });
+    }
+
+    private isNodeExcluded (node: HTMLElement): boolean {
+        const tagName = node.tagName.toUpperCase();
+        if (this.disallowedTagNames.includes(tagName)) {
+            return true;
+        }
+        if ((tagName === 'IFRAME' && node.getAttribute('id') === this.monsidoIframeId)) {
+            return true;
+        }
+
+        if (node.getAttribute('data-monsido-extension-id') && node.getAttribute('monsido-extension-version')) {
+            return true;
+        }
+
+        if (node.tagName === 'STYLE' && node.getAttribute('id') === this.monsidoExtensionRootStyleId) {
+            return true;
+        }
+
+        return false;
+
     }
 
     private setDefaultComputedStyles (): void {
