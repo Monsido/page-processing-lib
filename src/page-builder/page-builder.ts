@@ -1,4 +1,5 @@
 import { ElementType, ShadowRootType, TextNodeType, TreeType, CssType } from '../types';
+import { CssStringSerializer } from '../utils/css-string-serializer';
 
 type CssKVType = Record<string, string>;
 export class PageBuilder {
@@ -29,7 +30,14 @@ export class PageBuilder {
         const styleElement = document.createElement('style');
         let styles = '';
         Object.keys(css || {}).forEach((key: string) => {
-            styles += `[data-cs-${key}] {${css[parseInt(key)]}} `;
+            const encodedCssContent = css[parseInt(key)];
+            const decoded = CssStringSerializer.decode(encodedCssContent);
+            if (typeof decoded === 'string') {
+                styles += `[data-cs-${key}] {${css[parseInt(key)]}} `;
+            } else {
+                const [pseudoElementType, content] = decoded;
+                styles += `[data-cs-${key}]:${pseudoElementType} {${content}}`;
+            }
         });
 
         styleElement.textContent = styles.trimEnd();
@@ -55,6 +63,11 @@ export class PageBuilder {
         }
 
         this.dataCsId(element, cssList, node.ci);
+        if (node.pcis) {
+            for (const pci of node.pcis) {
+                this.dataCsId(element, cssList, pci);
+            }
+        }
         this.setAttributes(element, node.a);
         this.setShadowDom(element, node.sr);
         this.appendChildren(element, cssList, node.c);

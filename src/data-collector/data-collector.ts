@@ -1,5 +1,8 @@
 import { CssType, TreeType, TextNodeType } from '../types';
 import packageJson from '../../package.json';
+import { PseudoClassMap } from '../types/css-type';
+import { PseudoElementsList } from '../constants/pseudo-elements-list.constant';
+import { CssStringSerializer } from '../utils/css-string-serializer';
 
 export class DataCollector {
     private tree: TreeType = {};
@@ -44,6 +47,11 @@ export class DataCollector {
                 if (el.nodeType !== 11) { // not a shadowRoot
                     data.tn = (el as HTMLElement).tagName.toUpperCase(),
                     data.ci = this.processStyles(el as HTMLElement);
+                    const pseudoClassIndices = this.processPseudoElements(el as HTMLElement);
+                    if (pseudoClassIndices) {
+                        data.pcis = pseudoClassIndices;
+                    }
+
                     data.a = this.getAttributesList(el as HTMLElement);
 
                     const shadowRoot = (el as HTMLElement).shadowRoot;
@@ -108,7 +116,33 @@ export class DataCollector {
         }
 
         return false;
+    }
 
+    private processPseudoElements (el: HTMLElement): number[] | null {
+        const result: number[] = [];
+        for (const pseudoElementType of PseudoElementsList) {
+            const { styles, sameId } = this.collectUniqueStyles(el, pseudoElementType);
+            let csId = 0;
+
+            if (styles) {
+                if (sameId === undefined) {
+                    csId = this.css.length;
+                    this.css.push(CssStringSerializer.encode(styles, pseudoElementType));
+                } else {
+                    csId = sameId;
+                }
+
+                if (csId !== 0) {
+                    result.push(csId);
+                }
+            }
+        }
+
+        if (result.length === 0) {
+            return null;
+        }
+
+        return result;
     }
 
     private setDefaultComputedStyles (): void {
@@ -132,9 +166,13 @@ export class DataCollector {
         return csId;
     }
 
-    private getStylesAsRecord (el: HTMLElement): Record<string, string> {
-        const styleObj = window.getComputedStyle(el);
+    private getStylesAsRecord (el: HTMLElement, pseudoElement: string | null = null): Record<string, string> {
+        const styleObj = window.getComputedStyle(el, pseudoElement);
         const result: Record<string, string> = {};
+        if (pseudoElement !== null && (styleObj.content === 'none')) {
+            return result;
+
+        }
         for (let i = styleObj.length; i--; ) {
             const nameString = styleObj[i];
             result[nameString] = `${styleObj.getPropertyValue(nameString)};`;
@@ -142,8 +180,8 @@ export class DataCollector {
         return result;
     }
 
-    private collectUniqueStyles (el: HTMLElement): {styles: string, sameId: number | undefined} {
-        const styles = this.collectStyles(this.getStylesAsRecord(el), this.defaultStyles);
+    private collectUniqueStyles (el: HTMLElement, pseudoElement: string | null = null): {styles: string, sameId: number | undefined} {
+        const styles = this.collectStyles(this.getStylesAsRecord(el, pseudoElement), this.defaultStyles);
         let sameId: number | undefined;
 
         if (styles.length) {

@@ -167,4 +167,7 @@ describe('DataCollector', () => {
         });
     })
 
+    describe('Collects pseudo elements', () => {
+
+    })
 });

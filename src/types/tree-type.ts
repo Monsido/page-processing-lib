@@ -3,6 +3,7 @@ export type TreeType = ElementType;
 export type ElementType = {
     tn?: string,
     ci?: number,
+    pcis?: number[],
     a?: Array<Array<string>>,
     c?: Array<TreeType | TextNodeType>,
     sr?: ShadowRootType,
