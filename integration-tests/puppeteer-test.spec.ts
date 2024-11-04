@@ -41,6 +41,7 @@ describe('Puppeteer test', () => {
 
                 const newContext = await globalThis.__BROWSER_GLOBAL__.createIncognitoBrowserContext();
                 const newPage = await newContext.newPage();
+                newPage.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
                 await newPage.setViewport({ width: WIDTH, height: HEIGHT });
                 const injectedScriptNewPage: ElementHandle = await newPage.addScriptTag({
                     path: require.resolve(SCRIPT_PATH),
