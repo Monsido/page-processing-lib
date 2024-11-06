@@ -55,7 +55,7 @@ describe('DataCollector', () => {
             const result = await dataCollector.collectData(html);
             const elements = (result.tree.c as TreeType[])[1].c as TreeType[];
 
-            expect(elements[1].ci).toEqual(3);
+            expect(elements[1].ci).toEqual(3111111);
             expect(elements[3].ci).toEqual(3);
         });
 
