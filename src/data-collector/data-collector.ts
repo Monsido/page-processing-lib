@@ -8,12 +8,13 @@ export class DataCollector {
     private monsidoIframeId = 'monsido-extension-iframe';
     private defaultStyles?: Record<string, string>;
 
-    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string}> {
+    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string, vv: { w: number, h: number }}> {
         this.setDefaultComputedStyles();
+        const { width, height } = this.getViewPortSize();
         const newHtml = this.removeExtensionElements(html);
         const cleanedHtml = this.cleanUpText(newHtml.outerHTML);
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, html: cleanedHtml, v: packageJson.version };
+        return { tree: this.tree, css: this.css, html: cleanedHtml, v: packageJson.version, vv: { w: width, h: height } };
     }
 
     private removeExtensionElements (html: HTMLElement): HTMLElement {
@@ -89,6 +90,13 @@ export class DataCollector {
     private setDefaultComputedStyles (): void {
         this.defaultStyles = this.getStylesAsRecord(document.documentElement);
         this.css.push(this.collectStyles(this.defaultStyles));
+    }
+
+    private getViewPortSize (): {width: number, height: number} {
+        return {
+            width: window.visualViewport?.width || 0,
+            height: window.visualViewport?.height || 0,
+        };
     }
 
     private processStyles (el: HTMLElement): number | undefined {
