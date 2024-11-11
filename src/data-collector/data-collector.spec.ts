@@ -1,15 +1,79 @@
+import { CssType } from '../../dist/src/types';
 import { TreeType } from '../types';
 import { DataCollector } from './data-collector';
 
 describe('DataCollector', () => {
     let dataCollector: DataCollector;
 
+
     beforeEach(() => {
         dataCollector = new DataCollector();
+        Object.defineProperty(window, 'visualViewport', {
+            value: { width: 1024, height: 768 },
+            configurable: true,
+        });
+    });
+
+    afterEach(() => {
+        delete (window as any).visualViewport;
     });
 
     it('DataCollector instantiated', () => {
         expect(dataCollector).toBeDefined();
+    });
+
+    describe('getViewPortSize', () => {
+        let html: HTMLElement;
+
+        beforeEach(() => {
+            html = document.createElement('html');
+            delete (window as any).visualViewport;
+            delete (window as any).innerWidth;
+            delete (window as any).innerHeight;
+            delete (html as any).clientWidth;
+            delete (html as any).clientHeight;
+        });
+
+        it('should return viewport size from visualViewport', async () => { 
+            Object.defineProperty(window, 'visualViewport', {
+                value: { width: 1024, height: 768 },
+                configurable: true,
+            });  
+            const result = await dataCollector.collectData(html);
+            expect(result.vv).toEqual({ w: 1024, h: 768 });
+        });
+
+        it('should return viewport size from innerWidth and innerHeight', async () => {
+            Object.defineProperty(window, 'innerWidth', {
+                value: 800,
+                configurable: true,
+            });
+            Object.defineProperty(window, 'innerHeight', {
+                value: 600,
+                configurable: true,
+            });
+
+            const result = await dataCollector.collectData(html);
+            expect(result.vv).toEqual({ w: 800, h: 600 });
+        });
+
+        it('should return viewport size from html clientWidth and clientHeight', async () => {
+            Object.defineProperty(html, 'clientWidth', {
+                value: 640,
+                configurable: true,
+            });
+            Object.defineProperty(html, 'clientHeight', {
+                value: 480,
+                configurable: true,
+            });
+
+            const result = await dataCollector.collectData(html);
+            expect(result.vv).toEqual({ w: 640, h: 480 });
+        });
+
+        it('should throw an error if not viewport size available', async () => {
+            await expect(dataCollector.collectData(html)).rejects.toThrow('No viewport size found');
+        });
     });
 
     describe('Collects data', () => {

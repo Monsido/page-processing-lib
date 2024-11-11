@@ -9,8 +9,11 @@ export class DataCollector {
     private defaultStyles?: Record<string, string>;
 
     async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string, vv: { w: number, h: number }}> {
+        const { width, height } = this.getViewPortSize(html);
+        if (!width || !height) {
+            throw new Error('No viewport size found');
+        }
         this.setDefaultComputedStyles();
-        const { width, height } = this.getViewPortSize();
         const newHtml = this.removeExtensionElements(html);
         const cleanedHtml = this.cleanUpText(newHtml.outerHTML);
         this.tree = await this.processTree(html);
@@ -92,10 +95,13 @@ export class DataCollector {
         this.css.push(this.collectStyles(this.defaultStyles));
     }
 
-    private getViewPortSize (): {width: number, height: number} {
+    private getViewPortSize (html: HTMLElement): { width: number, height: number } {
+        const viewportWidth = window.visualViewport?.width || window.innerWidth || html.clientWidth;
+        const viewportHeight = window.visualViewport?.height || window.innerHeight || html.clientHeight;
+
         return {
-            width: window.visualViewport?.width || 0,
-            height: window.visualViewport?.height || 0,
+            width: viewportWidth,
+            height: viewportHeight,
         };
     }
 
