@@ -8,12 +8,16 @@ export class DataCollector {
     private monsidoIframeId = 'monsido-extension-iframe';
     private defaultStyles?: Record<string, string>;
 
-    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string}> {
+    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string, vv: { w: number, h: number }}> {
+        const { width, height } = this.getViewPortSize(html);
+        if (!width || !height) {
+            throw new Error('No viewport size found');
+        }
         this.setDefaultComputedStyles();
         const newHtml = this.removeExtensionElements(html);
         const cleanedHtml = this.cleanUpText(newHtml.outerHTML);
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, html: cleanedHtml, v: packageJson.version };
+        return { tree: this.tree, css: this.css, html: cleanedHtml, v: packageJson.version, vv: { w: width, h: height } };
     }
 
     private removeExtensionElements (html: HTMLElement): HTMLElement {
@@ -89,6 +93,16 @@ export class DataCollector {
     private setDefaultComputedStyles (): void {
         this.defaultStyles = this.getStylesAsRecord(document.documentElement);
         this.css.push(this.collectStyles(this.defaultStyles));
+    }
+
+    private getViewPortSize (html: HTMLElement): { width: number, height: number } {
+        const viewportWidth = window.visualViewport?.width || window.innerWidth || html.clientWidth;
+        const viewportHeight = window.visualViewport?.height || window.innerHeight || html.clientHeight;
+
+        return {
+            width: viewportWidth,
+            height: viewportHeight,
+        };
     }
 
     private processStyles (el: HTMLElement): number | undefined {
