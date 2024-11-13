@@ -1,15 +1,79 @@
-import { TreeType } from '../types/tree-type';
+import { CssType } from '../../dist/src/types';
+import { TreeType } from '../types';
 import { DataCollector } from './data-collector';
 
 describe('DataCollector', () => {
     let dataCollector: DataCollector;
 
+
     beforeEach(() => {
         dataCollector = new DataCollector();
+        Object.defineProperty(window, 'visualViewport', {
+            value: { width: 1024, height: 768 },
+            configurable: true,
+        });
+    });
+
+    afterEach(() => {
+        delete (window as any).visualViewport;
     });
 
     it('DataCollector instantiated', () => {
         expect(dataCollector).toBeDefined();
+    });
+
+    describe('getViewPortSize', () => {
+        let html: HTMLElement;
+
+        beforeEach(() => {
+            html = document.createElement('html');
+            delete (window as any).visualViewport;
+            delete (window as any).innerWidth;
+            delete (window as any).innerHeight;
+            delete (html as any).clientWidth;
+            delete (html as any).clientHeight;
+        });
+
+        it('should return viewport size from visualViewport', async () => { 
+            Object.defineProperty(window, 'visualViewport', {
+                value: { width: 1024, height: 768 },
+                configurable: true,
+            });  
+            const result = await dataCollector.collectData(html);
+            expect(result.vv).toEqual({ w: 1024, h: 768 });
+        });
+
+        it('should return viewport size from innerWidth and innerHeight', async () => {
+            Object.defineProperty(window, 'innerWidth', {
+                value: 800,
+                configurable: true,
+            });
+            Object.defineProperty(window, 'innerHeight', {
+                value: 600,
+                configurable: true,
+            });
+
+            const result = await dataCollector.collectData(html);
+            expect(result.vv).toEqual({ w: 800, h: 600 });
+        });
+
+        it('should return viewport size from html clientWidth and clientHeight', async () => {
+            Object.defineProperty(html, 'clientWidth', {
+                value: 640,
+                configurable: true,
+            });
+            Object.defineProperty(html, 'clientHeight', {
+                value: 480,
+                configurable: true,
+            });
+
+            const result = await dataCollector.collectData(html);
+            expect(result.vv).toEqual({ w: 640, h: 480 });
+        });
+
+        it('should throw an error if not viewport size available', async () => {
+            await expect(dataCollector.collectData(html)).rejects.toThrow('No viewport size found');
+        });
     });
 
     describe('Collects data', () => {
@@ -70,6 +134,8 @@ describe('DataCollector', () => {
 
     describe('Collects default CSS', () => {
         const html = document.createElement('html');
+        const htmlWithChild = document.createElement('html')
+        htmlWithChild.appendChild(document.createElement('body'))
 
         let windowSpy: jest.SpyInstance<unknown>;
 
@@ -83,7 +149,7 @@ describe('DataCollector', () => {
 
         const fakeComputedStyles: string[] & {getPropertyValue?: (prop: string) => string; el?: HTMLElement} = ['visibility', 'color'];
         fakeComputedStyles.getPropertyValue = (prop: string): string => {
-            const isDefaultStylesElement = fakeComputedStyles.el?.tagName.startsWith('ACQ-DEFAULT-ELEMENT');
+            const isDefaultStylesElement = fakeComputedStyles.el?.tagName === 'HTML';
             switch (prop) {
                 case 'visibility':
                     return 'visible';
@@ -112,7 +178,7 @@ describe('DataCollector', () => {
                     return fakeComputedStyles;
                 },
             );
-            const result = await dataCollector.collectData(html);
+            const result = await dataCollector.collectData(htmlWithChild);
             expect(result.css[1]).toEqual('color:green;');
         });
     });

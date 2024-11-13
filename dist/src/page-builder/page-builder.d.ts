@@ -1,7 +1,8 @@
-import { CssType } from '../types/css-type';
-import { TreeType } from '../types/tree-type';
+import { TreeType, CssType, ErrorHandlerType } from '../types';
 export declare class PageBuilder {
+    readonly errorHandler: ErrorHandlerType;
     css: CssType;
+    constructor(errorHandler?: ErrorHandlerType);
     makePage(content: {
         tree: TreeType;
         css: CssType;

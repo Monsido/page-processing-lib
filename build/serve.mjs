@@ -7,6 +7,7 @@ const settings = createBuildSettings({
     js: `new EventSource('/esbuild').addEventListener('change', () => location.reload());`,
   },
   outfile: 'www/index.js',
+  entryPoints: ['./src/index.ts']
 });
 
 const ctx = await esbuild.context(settings);
@@ -20,3 +21,4 @@ const { port } = await ctx.serve({
 });
 
 console.log(`Serving app at http://localhost:${port}.`);
+

@@ -3,18 +3,22 @@
  * @jest-environment jsdom
  */
 import { PageBuilder } from './page-builder';
-import { CssType } from '../types/css-type';
-import { TreeType } from '../types/tree-type';
+import { TreeType, CssType } from '../types';
 
 describe('PageBuilder', () => {
     let pageBuilder: PageBuilder;
     let docFragment = document.createDocumentFragment();
+    const onError = (msg: string, error: unknown) => {};
+    let pageBuilderOnErrorSpy: jest.SpyInstance;
 
     beforeEach(() => {
         while (docFragment.firstChild) {
             docFragment.removeChild(docFragment.firstChild);
         }
-        pageBuilder = new PageBuilder();
+        pageBuilder = new PageBuilder({
+            onError
+        });
+        pageBuilderOnErrorSpy = jest.spyOn(pageBuilder.errorHandler, 'onError');
     });
 
     describe('Create document fragment from tree and css', () => {
@@ -37,7 +41,7 @@ describe('PageBuilder', () => {
         });
 
         it('should be created', () => {
-            expect(docFragment.querySelector('div')?.outerHTML).toEqual(`<div data-cs-0="" name="container"><p data-cs-1="">Hello, World!</p></div>`);
+            expect(docFragment.querySelector('div')?.outerHTML).toEqual(`<div data-cs-0="" name="container"><p data-cs-0="" data-cs-1="">Hello, World!</p></div>`);
         });
 
         it('should contain a div with attribute', () => {
@@ -77,7 +81,8 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        expect(() => pageBuilder.makePage({ tree, css })).toThrow('InvalidCharacterError: \"\" did not match the Name production');
+        pageBuilder.makePage({ tree, css });
+        expect(pageBuilderOnErrorSpy).toHaveBeenCalledWith('Invalid attribute name: ', expect.anything());
     });
 
     it('should throw an error if an csId is undefined', () => {
@@ -89,7 +94,8 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        expect(() => pageBuilder.makePage({ tree, css })).toThrow('Invalid data-cs-id: "undefined"');
+        pageBuilder.makePage({ tree, css })
+        expect(pageBuilderOnErrorSpy).toHaveBeenCalledWith('Invalid data-cs-id: "undefined"');
     });
 
     it('should throw an error if an element node has an empty tagName', () => {
@@ -101,7 +107,8 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        expect(() => pageBuilder.makePage({ tree, css })).toThrow('TagName: InvalidCharacterError: "" did not match the Name production');
+        pageBuilder.makePage({ tree, css })
+        expect(pageBuilderOnErrorSpy).toHaveBeenNthCalledWith(1, 'Invalid Tag name: ',  expect.anything());
     });
 
     it('should throw an error if Node does not have a tagName or text property', () => {
@@ -110,7 +117,8 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        expect(() => pageBuilder.makePage({ tree, css })).toThrow('NodeType: Unknown node type');
+        pageBuilder.makePage({ tree, css })
+        expect(pageBuilderOnErrorSpy).toHaveBeenNthCalledWith(1, 'NodeType: Unknown node type');
     });
 
     it('should append styles to the head element if it exists', () => {

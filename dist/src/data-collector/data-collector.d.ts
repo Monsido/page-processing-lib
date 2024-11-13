@@ -1,5 +1,4 @@
-import { CssType } from '../types/css-type';
-import { TreeType } from '../types/tree-type';
+import { CssType, TreeType } from '../types';
 export declare class DataCollector {
     private tree;
     private css;
@@ -11,10 +10,15 @@ export declare class DataCollector {
         css: CssType;
         html: string;
         v: string;
+        vv: {
+            w: number;
+            h: number;
+        };
     }>;
     private removeExtensionElements;
     private processTree;
     private setDefaultComputedStyles;
+    private getViewPortSize;
     private processStyles;
     private getStylesAsRecord;
     private collectUniqueStyles;
