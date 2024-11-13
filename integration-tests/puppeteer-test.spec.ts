@@ -1,5 +1,5 @@
 import { CssType, TreeType } from '../src/types';
-import { ElementHandle } from 'puppeteer';
+import { PageBuilder, DataCollector } from '../src';
 import pixelmatch from 'pixelmatch';
 import fs from 'fs';
 import { join } from 'path';
@@ -9,7 +9,6 @@ import '../src/types/global';
 const SCREENSHOTS_DIR = join(__dirname, 'screenshots');
 const SOURCE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_original.png');
 const COMPARE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_compare.png');
-const SCRIPT_PATH = '../dist/index.script.js';
 const URL = 'https://test-page-8.sidomon.com';
 const WIDTH = 1366;
 const HEIGHT = 768;
@@ -27,13 +26,10 @@ describe('Puppeteer test', () => {
                 await page.setViewport({ width: WIDTH, height: HEIGHT });
                 await page.goto(URL);
 
-                const injectedScript: ElementHandle = await page.addScriptTag({ path: require.resolve(SCRIPT_PATH) });
-                await injectedScript.evaluate((domEl) => {
-                    domEl.remove();
-                });
-
+                await page.evaluate(`window.DataCollector = ${DataCollector.toString()}`);
                 const { css, tree } = await page.evaluate(async (): Promise<{ tree: TreeType; css: CssType }> => {
-                    return await window.monAccPplDataCollector.collectData(window.document.documentElement);
+                    const dataCollector = new window.DataCollector();
+                    return await dataCollector.collectData(window.document.documentElement);
                 });
 
                 await page.screenshot({ path: SOURCE_IMAGE_PATH });
@@ -43,15 +39,16 @@ describe('Puppeteer test', () => {
                 const newPage = await newContext.newPage();
                 newPage.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
                 await newPage.setViewport({ width: WIDTH, height: HEIGHT });
-                const injectedScriptNewPage: ElementHandle = await newPage.addScriptTag({
-                    path: require.resolve(SCRIPT_PATH),
-                });
-                await injectedScriptNewPage.evaluate((domEl) => {
-                    domEl.remove();
-                });
+
+                await page.evaluate(`window.PageBuilder = ${PageBuilder.toString()}`);
                 await newPage.evaluate(
                     (treeIn: TreeType, cssIn: CssType) => {
-                        const docFragment = window.monAccPplPageBuilder.makePage({ tree: treeIn, css: cssIn });
+                        const builder = new window.PageBuilder({
+                            onError: (msg: string, error?: unknown): void => {
+                                console.error(msg, error);
+                            },
+                        });
+                        const docFragment = builder.makePage({ tree: treeIn, css: cssIn });
                         document.open();
                         document.write(docFragment.querySelector('html')?.outerHTML ?? '');
                         document.close();

@@ -7,7 +7,7 @@ declare global {
     var __BROWSER_GLOBAL__: Browser;
 
     interface Window {
-        monAccPplDataCollector: DataCollector;
-        monAccPplPageBuilder: PageBuilder;
+        DataCollector: typeof DataCollector;
+        PageBuilder: typeof PageBuilder;
     }
 }
