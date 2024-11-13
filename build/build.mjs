@@ -31,7 +31,7 @@ const scriptBuildSettings  = createBuildSettings({
     ...commonSettings,
     format: 'cjs',
     outfile: 'dist/index.script.js',
-    entryPoints: ['./src/index.script.ts'],
+    entryPoints: ['./src/index.ts'],
 });
 esbuild.build(settings).catch(() => process.exit(1));
 esbuild.build(scriptBuildSettings).catch(() => process.exit(1));
