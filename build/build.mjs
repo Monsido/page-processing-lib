@@ -29,6 +29,7 @@ const settings = createBuildSettings({
 });
 const scriptBuildSettings  = createBuildSettings({
     ...commonSettings,
+    format: 'cjs',
     outfile: 'dist/index.script.js',
     entryPoints: ['./src/index.script.ts'],
 });
