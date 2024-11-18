@@ -16,7 +16,7 @@ const HEIGHT = 768;
 
 ensureScreenshotFolderExists(SCREENSHOTS_DIR);
 
-fdescribe('Puppeteer test', () => {
+describe('Puppeteer test', () => {
     beforeEach(() => {});
 
     describe('Create browser, extract page data and reassemble it', () => {
