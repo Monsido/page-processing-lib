@@ -17,6 +17,12 @@
         "version": "yarn version",
         "prepare": "husky"
     },
+    "exports": {
+        ".": {
+            "require": "./dist/index.cjs.js",
+            "import": "./dist/index.js"
+        }
+    },
     "files": [
         "dist/**/*.js",
         "dist/**/*.d.ts"

@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, rmSync } from 'fs';
 import { resolve } from 'path';
 
 // Function to clean the dist directory
-function cleanDist () {
+function cleanDist() {
     const distPath = resolve('./dist');
     if (existsSync(distPath)) {
         rmSync(distPath, { recursive: true, force: true });
@@ -21,17 +21,16 @@ execSync('tsc --project tsconfig.json', { stdio: 'inherit' });
 // Run esbuild to bundle the library
 const commonSettings = {
     minify: true,
+    entryPoints: ['./src/index.ts'],
 };
-const settings = createBuildSettings({
+const esmSettings = createBuildSettings({
     ...commonSettings,
     outfile: 'dist/index.js',
-    entryPoints: ['./src/index.ts'],
 });
-const scriptBuildSettings  = createBuildSettings({
+const cjsSettings = createBuildSettings({
     ...commonSettings,
     format: 'cjs',
-    outfile: 'dist/src/index.script.js',
-    entryPoints: ['./src/index.script.ts'],
+    outfile: 'dist/index.cjs.js',
 });
-esbuild.build(settings).catch(() => process.exit(1));
-esbuild.build(scriptBuildSettings).catch(() => process.exit(1));
+esbuild.build(esmSettings).catch(() => process.exit(1));
+esbuild.build(cjsSettings).catch(() => process.exit(1));
