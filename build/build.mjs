@@ -25,6 +25,7 @@ const commonSettings = {
 };
 const esmSettings = createBuildSettings({
     ...commonSettings,
+    format: 'esm',
     outfile: 'dist/index.js',
 });
 const cjsSettings = createBuildSettings({
