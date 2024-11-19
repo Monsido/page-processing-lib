@@ -1,11 +1,12 @@
 import esbuild from 'esbuild';
 import { createBuildSettings } from './settings.mjs';
 
-const settings = createBuildSettings({ 
+const settings = createBuildSettings({
   sourcemap: true,
   banner: {
     js: `new EventSource('/esbuild').addEventListener('change', () => location.reload());`,
   },
+  format: 'esm',
   outfile: 'www/index.js',
   entryPoints: ['./src/index.ts']
 });
