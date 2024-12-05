@@ -11,4 +11,8 @@ describe('Main lib checks', () => {
     it('contains the current version', () => {
         expect(lib).toContain(version);
     });
+
+    it('version is correct', () => {
+        expect(/^[\d]{1,1}\.[\d]{1,3}\.[\d]{1,3}$/.test(version)).toBe(true);
+    });
 });
