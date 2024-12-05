@@ -1,5 +1,5 @@
 import { CssType, TreeType, TextNodeType } from '../types';
-import packageJson from '../../package.json';
+import { version } from '../../package.json';
 
 export class DataCollector {
     private tree: TreeType = {};
@@ -17,7 +17,7 @@ export class DataCollector {
         const newHtml = this.removeExtensionElements(html);
         const cleanedHtml = this.cleanUpText(newHtml.outerHTML);
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, html: cleanedHtml, v: packageJson.version, vv: { w: width, h: height } };
+        return { tree: this.tree, css: this.css, html: cleanedHtml, v: version, vv: { w: width, h: height } };
     }
 
     private removeExtensionElements (html: HTMLElement): HTMLElement {
