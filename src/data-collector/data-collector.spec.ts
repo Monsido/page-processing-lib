@@ -40,7 +40,7 @@ describe('DataCollector', () => {
                 configurable: true,
             });  
             const result = await dataCollector.collectData(html);
-            expect(result.vv).toEqual({ w: 1024, h: 768 });
+            expect(result.viewport).toEqual({ w: 1024, h: 768 });
         });
 
         it('should return viewport size from innerWidth and innerHeight', async () => {
@@ -54,7 +54,7 @@ describe('DataCollector', () => {
             });
 
             const result = await dataCollector.collectData(html);
-            expect(result.vv).toEqual({ w: 800, h: 600 });
+            expect(result.viewport).toEqual({ w: 800, h: 600 });
         });
 
         it('should return viewport size from html clientWidth and clientHeight', async () => {
@@ -68,7 +68,7 @@ describe('DataCollector', () => {
             });
 
             const result = await dataCollector.collectData(html);
-            expect(result.vv).toEqual({ w: 640, h: 480 });
+            expect(result.viewport).toEqual({ w: 640, h: 480 });
         });
 
         it('should throw an error if not viewport size available', async () => {
