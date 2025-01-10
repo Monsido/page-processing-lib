@@ -28,7 +28,7 @@ usage:
 import { DataCollector } from 'page-processing-lib';
 
 const dataCollector = new DataCollector();
-dataCollector.collectData(html: HTMLDocument): JSON<{ tree, css }>;
+dataCollector.collectData(html: HTMLDocument): JSON<{ dom_tree, css }>;
 ```
 
 ### PageBuilder
@@ -39,13 +39,13 @@ usage:
 import { PageBuilder } from 'page-processing-lib';
 
 const pageBuilder = new PageBuilder();
-pageBuilder.makePage(JSON<{ tree, css}>): HTMLDocument;
+pageBuilder.makePage(JSON<{ dom_tree, css}>): HTMLDocument;
 ```
 
 ## Data structure
 ```ts
-// JSON<{tree; css;}>
-tree: Element = { // Tree of nodes
+// JSON<{dom_tree; css;}>
+dom_tree: Element = { // Tree of nodes
     tn?: string; // (Tag name)
     ci?: number; // (computed style id)
     a?: Array<Array<string>>;  // (attributes) [[‘font-size’, ‘17px’], [‘font-family’, ‘Arial’]] 
@@ -66,7 +66,7 @@ v: string; // Library version
 Example
 ```json 
 {
-    "tree": {
+    "dom_tree": {
 		"tn": "html",
 		"ci": 0,
 	    "a": [

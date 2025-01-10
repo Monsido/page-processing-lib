@@ -12,10 +12,10 @@ export class PageBuilder {
     css: CssType = [];
     constructor (readonly errorHandler: ErrorHandlerType = defaultErrorHandler) {}
 
-    makePage (content: { tree: TreeType, css: CssType }): DocumentFragment {
+    makePage (content: { dom_tree: TreeType, css: CssType }): DocumentFragment {
         this.css = content.css;
         const rootCssList: CssKVType = {};
-        const rootNode = this.traverseTree(content.tree, rootCssList);
+        const rootNode = this.traverseTree(content.dom_tree, rootCssList);
         const docFragment = document.createDocumentFragment();
         if (!rootNode) {
             this.errorHandler.onError('Unable to make page from tree root');

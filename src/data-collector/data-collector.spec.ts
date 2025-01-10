@@ -89,7 +89,7 @@ describe('DataCollector', () => {
 
         it('should collect HTML as tree', async () => {
             const result = await dataCollector.collectData(html);
-            expect(result.tree).toEqual(expectedTree);
+            expect(result.dom_tree).toEqual(expectedTree);
         });
 
         it('should collect Styles as css', async () => {
@@ -102,7 +102,7 @@ describe('DataCollector', () => {
             (html.querySelector('body') as HTMLElement).appendChild(document.createElement('script'));
 
             const result = await dataCollector.collectData(html);
-            expect(result.tree).toEqual(expectedTree);
+            expect(result.dom_tree).toEqual(expectedTree);
         });
     });
 
@@ -117,7 +117,7 @@ describe('DataCollector', () => {
 
         it('elements with the same styles should have the same csId', async () => {
             const result = await dataCollector.collectData(html);
-            const elements = (result.tree.c as TreeType[])[1].c as TreeType[];
+            const elements = (result.dom_tree.c as TreeType[])[1].c as TreeType[];
 
             expect(elements[1].ci).toEqual(3);
             expect(elements[3].ci).toEqual(3);
@@ -195,14 +195,14 @@ describe('DataCollector', () => {
         it('should collect attributes in the correct order - one element', async () => {
             const result = await dataCollector.collectData(html);
             expect(
-                ((result.tree.c as TreeType[])[1].c as TreeType[])[1].a,
+                ((result.dom_tree.c as TreeType[])[1].c as TreeType[])[1].a,
             ).toEqual([['hidden', ''], ['style', 'padding:2px'], ['id', 'testDiv']]);
         });
 
         it('should collect attributes in the correct order - another element', async () => {
             const result = await dataCollector.collectData(html);
             expect(
-                ((result.tree.c as TreeType[])[1].c as TreeType[])[3].a,
+                ((result.dom_tree.c as TreeType[])[1].c as TreeType[])[3].a,
             ).toEqual([['style', 'padding:2px'], ['id', 'testDiv'], ['hidden', '']]);
         });
 

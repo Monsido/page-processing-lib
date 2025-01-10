@@ -22,7 +22,7 @@ describe('PageBuilder', () => {
     });
 
     describe('Create document fragment from tree and css', () => {
-        const tree: TreeType = {
+        const dom_tree: TreeType = {
             tn: 'div',
             ci: 0,
             a: [['name', 'container']],
@@ -37,7 +37,7 @@ describe('PageBuilder', () => {
         const css: CssType = ['color: red;', 'font-size: 16px;'];
 
         beforeEach(() => {
-            docFragment = pageBuilder.makePage({ tree, css });
+            docFragment = pageBuilder.makePage({ dom_tree, css });
         });
 
         it('should be created', () => {
@@ -58,7 +58,7 @@ describe('PageBuilder', () => {
     });
 
     it('should set attributes in the right order', () => {
-        const tree: TreeType = {
+        const dom_tree: TreeType = {
             tn: 'div',
             ci: 0,
             a: [['id', 'main'], ['name', 'container']],
@@ -66,13 +66,13 @@ describe('PageBuilder', () => {
         };
 
         const css: CssType = ['color: red;'];
-        docFragment = pageBuilder.makePage({ tree, css });
+        docFragment = pageBuilder.makePage({ dom_tree, css });
         const divElement = docFragment.querySelector('div');
         expect(divElement?.outerHTML).toContain('id="main" name="container"');
     });
 
     it('should throw an error if an attribute has an empty key', () => {
-        const tree: TreeType = {
+        const dom_tree: TreeType = {
             tn: 'div',
             ci: 0,
             a: [['', 'main']],
@@ -81,12 +81,12 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        pageBuilder.makePage({ tree, css });
+        pageBuilder.makePage({ dom_tree, css });
         expect(pageBuilderOnErrorSpy).toHaveBeenCalledWith('Invalid attribute name: ', expect.anything());
     });
 
     it('should throw an error if an csId is undefined', () => {
-        const tree: TreeType = {
+        const dom_tree: TreeType = {
             tn: 'div',
             a: [],
             c: [],
@@ -94,12 +94,12 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        pageBuilder.makePage({ tree, css })
+        pageBuilder.makePage({ dom_tree, css })
         expect(pageBuilderOnErrorSpy).toHaveBeenCalledWith('Invalid data-cs-id: "undefined"');
     });
 
     it('should throw an error if an element node has an empty tagName', () => {
-        const tree: TreeType = {
+        const dom_tree: TreeType = {
             tn: '',
             ci: 0,
             c: [],
@@ -107,22 +107,22 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        pageBuilder.makePage({ tree, css })
+        pageBuilder.makePage({ dom_tree, css })
         expect(pageBuilderOnErrorSpy).toHaveBeenNthCalledWith(1, 'Invalid Tag name: ',  expect.anything());
     });
 
     it('should throw an error if Node does not have a tagName or text property', () => {
-        const tree: TreeType = {
+        const dom_tree: TreeType = {
         };
 
         const css: CssType = ['color: red;'];
 
-        pageBuilder.makePage({ tree, css })
+        pageBuilder.makePage({ dom_tree, css })
         expect(pageBuilderOnErrorSpy).toHaveBeenNthCalledWith(1, 'NodeType: Unknown node type');
     });
 
     it('should append styles to the head element if it exists', () => {
-        const tree: TreeType = {
+        const dom_tree: TreeType = {
             tn: 'html',
             a: [['lang', 'en']],
             ci: 0,
@@ -149,12 +149,12 @@ describe('PageBuilder', () => {
         };
 
         const css: CssType = ['color: red;'];
-        docFragment = pageBuilder.makePage({ tree, css });
+        docFragment = pageBuilder.makePage({ dom_tree, css });
         expect(docFragment.querySelector('head style')?.outerHTML).toBe('<style>[data-cs-0] {color: red;}</style>');
     });
 
     it('should append styles to the document fragment if head does not exists', () => {
-        const tree: TreeType = {
+        const dom_tree: TreeType = {
             tn: 'div',
             ci: 0,
             a: [['name', 'container']],
@@ -163,14 +163,14 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        docFragment = pageBuilder.makePage({ tree, css });
+        docFragment = pageBuilder.makePage({ dom_tree, css });
 
         expect(docFragment.querySelector('style')?.outerHTML).toContain('<style>[data-cs-0] {color: red;}</style>');
     });
 
     describe('Create shadowDom', () => {
         it('should create shadowDOM and add children', () => {
-            const tree: TreeType = {
+            const dom_tree: TreeType = {
                 tn: 'div',
                 ci: 0,
                 sr: {
@@ -186,7 +186,7 @@ describe('PageBuilder', () => {
             };
 
             const css: CssType = ['color: red;'];
-            docFragment = pageBuilder.makePage({ tree, css });
+            docFragment = pageBuilder.makePage({ dom_tree, css });
 
             const shadowHost = docFragment.querySelector('div');
             const shadowRoot = shadowHost?.shadowRoot;
@@ -194,7 +194,7 @@ describe('PageBuilder', () => {
         });
 
         it('should style tag in shadowDOM for children', () => {
-            const tree: TreeType = {
+            const dom_tree: TreeType = {
                 tn: 'div',
                 ci: 0,
                 sr: {
@@ -210,7 +210,7 @@ describe('PageBuilder', () => {
             };
 
             const css: CssType = ['color: red;' , 'font-size: 16px;'];
-            docFragment = pageBuilder.makePage({ tree, css });
+            docFragment = pageBuilder.makePage({ dom_tree, css });
 
             const shadowHost = docFragment.querySelector('div');
             const shadowRoot = shadowHost?.shadowRoot;
@@ -219,7 +219,7 @@ describe('PageBuilder', () => {
     });
 
     it('should handle nested elements', () => {
-        const tree: TreeType = {
+        const dom_tree: TreeType = {
             tn: 'div',
             ci: 0,
             c: [
@@ -237,19 +237,19 @@ describe('PageBuilder', () => {
             ],
         };
         const css: CssType = ['color: red;', 'font-size: 16px;', 'margin: 10px;'];
-        docFragment = pageBuilder.makePage({ tree, css });
+        docFragment = pageBuilder.makePage({ dom_tree, css });
         const pElement = docFragment.querySelector('div > section > p');
         expect(pElement?.textContent).toBe('Nested paragraph');
     });
 
     it('should handle elements with no children', () => {
-        const tree: TreeType = {
+        const dom_tree: TreeType = {
             tn: 'div',
             ci: 0,
             c: [],
         };
         const css: CssType = ['color: red;'];
-        docFragment = pageBuilder.makePage({ tree, css });
+        docFragment = pageBuilder.makePage({ dom_tree, css });
         const divElement = docFragment.querySelector('div');
         expect(divElement?.children.length).toBe(0);
     });

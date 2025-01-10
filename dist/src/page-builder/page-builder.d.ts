@@ -4,7 +4,7 @@ export declare class PageBuilder {
     css: CssType;
     constructor(errorHandler?: ErrorHandlerType);
     makePage(content: {
-        tree: TreeType;
+        dom_tree: TreeType;
         css: CssType;
     }): DocumentFragment;
     private appendStyle;
