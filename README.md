@@ -44,7 +44,7 @@ pageBuilder.makePage(JSON<{ dom_tree, css}>): HTMLDocument;
 
 ## Data structure
 ```ts
-// JSON<{dom_tree; css;}>
+// JSON<{dom_tree: Element, css: string[], version: string}>
 dom_tree: Element = { // Tree of nodes
     tn?: string; // (Tag name)
     ci?: number; // (computed style id)
@@ -61,7 +61,7 @@ dom_tree: Element = { // Tree of nodes
     }
 }
 css: Array<string>; // CSS data the 0-entry contains the default CS
-v: string; // Library version
+version: string; // Library version
 ```
 Example
 ```json 
@@ -114,6 +114,6 @@ Example
         "color: rgb(153, 153, 153);", // ci2
         …
     ],
-    "v: "1.0.0",
+    "version": "1.0.0",
 }
 ```
