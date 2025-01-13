@@ -25,7 +25,7 @@ export type ElementType = {
     a?: Array<Array<string>>,
     c?: Array<TreeType | TextNodeType>,
     sr?: ShadowRootType,
-} | Record<string, never>
+} | Record<string, never>;
 
 export type ShadowRootType = {
     tn?: string,
@@ -33,6 +33,6 @@ export type ShadowRootType = {
     a?: Array<Array<string>>,
     c?: Array<TreeType | TextNodeType>,
     sr?: ShadowRootType,
-}
+};
 
 export type TextNodeType = { t: string };

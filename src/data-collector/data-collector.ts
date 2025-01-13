@@ -27,7 +27,7 @@ export class DataCollector {
     private monsidoIframeId = 'monsido-extension-iframe';
     private defaultStyles?: Record<string, string>;
 
-    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string, vv: { w: number, h: number }}> {
+    async collectData (html: HTMLElement): Promise<{ tree: TreeType, css: CssType, html: string, v: string, vv: { w: number, h: number } }> {
         const { width, height } = this.getViewPortSize(html);
         if (!width || !height) {
             throw new Error('No viewport size found');
@@ -143,14 +143,14 @@ export class DataCollector {
     private getStylesAsRecord (el: HTMLElement): Record<string, string> {
         const styleObj = window.getComputedStyle(el);
         const result: Record<string, string> = {};
-        for (let i = styleObj.length; i--; ) {
+        for (let i = styleObj.length; i--;) {
             const nameString = styleObj[i];
             result[nameString] = `${styleObj.getPropertyValue(nameString)};`;
         }
         return result;
     }
 
-    private collectUniqueStyles (el: HTMLElement): {styles: string, sameId: number | undefined} {
+    private collectUniqueStyles (el: HTMLElement): { styles: string, sameId: number | undefined } {
         const styles = this.collectStyles(this.getStylesAsRecord(el), this.defaultStyles);
         let sameId: number | undefined;
 

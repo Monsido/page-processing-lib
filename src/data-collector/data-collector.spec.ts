@@ -17,7 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with page-processing-lib. If not, see <http://www.gnu.org/licenses/>.
 */
-import { CssType } from '../../dist/src/types';
 import { TreeType } from '../types';
 import { DataCollector } from './data-collector';
 
@@ -34,7 +33,7 @@ describe('DataCollector', () => {
     });
 
     afterEach(() => {
-        delete (window as any).visualViewport;
+        delete (window as unknown as { visualViewport: unknown }).visualViewport;
     });
 
     it('DataCollector instantiated', () => {
@@ -46,11 +45,11 @@ describe('DataCollector', () => {
 
         beforeEach(() => {
             html = document.createElement('html');
-            delete (window as any).visualViewport;
-            delete (window as any).innerWidth;
-            delete (window as any).innerHeight;
-            delete (html as any).clientWidth;
-            delete (html as any).clientHeight;
+            delete (window as unknown as { visualViewport: unknown }).visualViewport;
+            delete (window as unknown as { innerWidth: unknown }).innerWidth;
+            delete (window as unknown as { innerHeight: unknown }).innerHeight;
+            delete (html as unknown as { clientWidth: unknown }).clientWidth;
+            delete (html as unknown as { clientHeight: unknown }).clientHeight;
         });
 
         it('should return viewport size from visualViewport', async () => {
@@ -103,7 +102,29 @@ describe('DataCollector', () => {
             html.innerHTML = '<head></head><body><div>test</div></body>';
         });
 
-        const expectedTree = { 'a': [], 'c': [{ 'a': [], 'ci': 1, 'tn': 'HEAD' }, { 'a': [], 'c': [{ 'a': [], 'c': [{ 't': 'test' }], 'ci': 3, 'tn': 'DIV' }], 'ci': 2, 'tn': 'BODY' }], 'ci': 0, 'tn': 'HTML' };
+        const expectedTree = {
+            'a': [],
+            'c': [{
+                'a': [],
+                'ci': 1,
+                'tn': 'HEAD',
+            },
+            {
+                'a': [],
+                'c': [{
+                    'a': [],
+                    'c': [{
+                        't': 'test',
+                    }],
+                    'ci': 3,
+                    'tn': 'DIV',
+                }],
+                'ci': 2,
+                'tn': 'BODY',
+            }],
+            'ci': 0,
+            'tn': 'HTML',
+        };
         const expectedCss = ['visibility:visible;', 'display:none;', 'margin:8px;display:block;', 'display:block;'];
 
         it('should collect HTML as tree', async () => {
@@ -153,8 +174,8 @@ describe('DataCollector', () => {
 
     describe('Collects default CSS', () => {
         const html = document.createElement('html');
-        const htmlWithChild = document.createElement('html')
-        htmlWithChild.appendChild(document.createElement('body'))
+        const htmlWithChild = document.createElement('html');
+        htmlWithChild.appendChild(document.createElement('body'));
 
         let windowSpy: jest.SpyInstance<unknown>;
 
@@ -166,7 +187,7 @@ describe('DataCollector', () => {
             windowSpy.mockRestore();
         });
 
-        const fakeComputedStyles: string[] & {getPropertyValue?: (prop: string) => string; el?: HTMLElement} = ['visibility', 'color'];
+        const fakeComputedStyles: string[] & { getPropertyValue?: (prop: string) => string; el?: HTMLElement } = ['visibility', 'color'];
         fakeComputedStyles.getPropertyValue = (prop: string): string => {
             const isDefaultStylesElement = fakeComputedStyles.el?.tagName === 'HTML';
             switch (prop) {
