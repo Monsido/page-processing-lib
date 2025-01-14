@@ -41,14 +41,14 @@ describe('Puppeteer test', () => {
 
     describe('Create browser, extract page data and reassemble it', () => {
         it('rendered page should be the same as the reconstructed page after using the page-processing-lib', async () => {
-                const context = await globalThis.__BROWSER_GLOBAL__.createIncognitoBrowserContext();
+                const context = await globalThis.__BROWSER_GLOBAL__.createBrowserContext();
                 const page = await context.newPage();
                 await page.setViewport({ width: WIDTH, height: HEIGHT });
                 await page.goto(URL);
                 await page.screenshot({ path: SOURCE_IMAGE_PATH });
                 await context.close();
 
-                const newContext = await globalThis.__BROWSER_GLOBAL__.createIncognitoBrowserContext();
+                const newContext = await globalThis.__BROWSER_GLOBAL__.createBrowserContext();
                 const newPage = await newContext.newPage();
                 newPage.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
                 let parsedEncodedPage: { dom_tree: TreeType, css: CssType, viewport: { w: number, h: number }, v: string } = {
