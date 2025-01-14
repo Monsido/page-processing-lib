@@ -23,6 +23,7 @@ import { version } from '../../package.json';
 export class DataCollector {
     private tree: TreeType = {};
     private css: CssType = [];
+    private version?: string;
     private disallowedTagNames = ['STYLE', 'SCRIPT', 'MONSIDO-EXTENSION'];
     private monsidoIframeId = 'monsido-extension-iframe';
     private defaultStyles?: Record<string, string>;
@@ -36,7 +37,11 @@ export class DataCollector {
         const newHtml = this.removeExtensionElements(html);
         const cleanedHtml = this.cleanUpText(newHtml.outerHTML);
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, html: cleanedHtml, v: version, vv: { w: width, h: height } };
+        return { tree: this.tree, css: this.css, html: cleanedHtml, v: this.version || version, vv: { w: width, h: height } };
+    }
+
+    public setVersion (v: string): void {
+        this.version = v;
     }
 
     private removeExtensionElements (html: HTMLElement): HTMLElement {
