@@ -1,40 +1,54 @@
-# Contributing
+# Contributing to Page Processing Library
 
-## Submitting pull requests
+Thank you for considering contributing to our project! We welcome contributions from the community and are excited to see what you will bring to the table.
 
-Pull requests must also adhere to the following guidelines:
+## How to Contribute
 
-- Pull requests must be atomic and targeted at a single issue rather than broad scope.
-- Pull requests must contain clear testing steps and justification, and all other information required by the pull request template.
-- Pull requests must pass automated tests before they will be reviewed. Acquia recommends running the tests locally before submitting.
-- Pull requests must meet Drupal coding standards and best practices as defined by the project maintainers.
+1. **Fork the repository**: Click the "Fork" button at the top right of the repository page to create a copy of the repository in your GitHub account.
 
-## Building and testing
+2. **Clone your fork**: Clone your forked repository to your local machine using the following command:
+    ```sh
+    git clone https://github.com/your-username/page-processing-lib.git
+    ```
 
-No special tools or dependencies are necessary to develop or contrib to Acquia Page Processing Library. Simply clone the Git repo and install yarn dependencies:
+3. **Create a branch**: Create a new branch for your feature or bug fix:
+    ```sh
+    git checkout -b my-feature-branch
+    ```
+
+4. **Make your changes**: Implement your feature or bug fix.
+
+5. **Commit your changes**: Commit your changes with a clear and concise commit message:
+    ```sh
+    git add .
+    git commit -m "Add feature/fix bug: description"
+    ```
+
+6. **Push to your fork**: Push your changes to your forked repository:
+    ```sh
+    git push origin my-feature-branch
+    ```
+
+7. **Create a Pull Request**: Open a pull request to the main repository. Provide a clear description of your changes and any relevant information.
+
+## Code Style
+
+Please ensure your code adheres to the following style guidelines:
+- Follow the existing code style and conventions.
+- Write clear and concise comments where necessary.
+- Ensure your code is well-documented.
+
+## Testing
+
+Please write tests for your changes and ensure all existing tests pass before submitting your pull request. Run the tests using the following command:
+```sh
+npm test
 ```
-git clone git@github.com:acquia/page-processing-library.git
-cd page-processing-library
-yarn install
-yarn serve
-```
 
-Be sure to validate and test your code locally using the provided yarn test scripts (`yarn test`) before opening a PR.
+## Code of Conduct
 
-### Building dist files
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project, you agree to abide by its terms.
 
-1. Install yarn dependencies: `yarn install`
-2. Build output files: `yarn build`
-3. Now the [index.js](dist/index.js) file is ready to be used in your project.
+## Thank You!
 
-### Writing tests
-
-New code should be covered at 100% (or as close to it as reasonably possible) by Jest unit tests. It should also minimize the number of escaped mutants (as close to 0% as reasonably possible), which will appear as annotations on your PR after unit tests run.
-
-Every class / command has a corresponding test file. The first test case in each file should be the "default" passing workflow for that command. Additional test cases should cover any possible inputs for that command as well as any possible error cases.
-
-Jest data providers may be used to fuzz input for a test case as long as the output remains the same. However, if the output of a command varies non-trivially based on input, it should probably be broken into different test cases rather than using a data provider.
-
-Test cases are declarative specifications. They should not implement or utilize any logic, especially not as provided by the covered source code itself.
-
-
+Thank you for your contributions! Your support is greatly appreciated.
