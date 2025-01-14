@@ -42,7 +42,7 @@ Please ensure your code adheres to the following style guidelines:
 
 Please write tests for your changes and ensure all existing tests pass before submitting your pull request. Run the tests using the following command:
 ```sh
-npm test
+yarn test
 ```
 
 ## Code of Conduct

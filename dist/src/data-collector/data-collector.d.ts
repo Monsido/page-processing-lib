@@ -2,6 +2,7 @@ import { CssType, TreeType } from '../types';
 export declare class DataCollector {
     private tree;
     private css;
+    private version?;
     private disallowedTagNames;
     private monsidoIframeId;
     private defaultStyles?;
@@ -15,6 +16,7 @@ export declare class DataCollector {
             h: number;
         };
     }>;
+    setVersion(v: string): void;
     private removeExtensionElements;
     private processTree;
     private setDefaultComputedStyles;
