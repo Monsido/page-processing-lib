@@ -7,11 +7,11 @@ export declare class DataCollector {
     private monsidoIframeId;
     private defaultStyles?;
     collectData(html: HTMLElement): Promise<{
-        tree: TreeType;
+        dom_tree: TreeType;
         css: CssType;
         html: string;
-        v: string;
-        vv: {
+        version: string;
+        viewport: {
             w: number;
             h: number;
         };

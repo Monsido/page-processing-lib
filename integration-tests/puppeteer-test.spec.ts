@@ -25,7 +25,6 @@ import fs from 'fs';
 import { join } from 'path';
 const PNG = require('pngjs').PNG;
 import '../src/types/global';
-import { encodedPage } from './test-page-8-encoded-page.json'
 
 const SCREENSHOTS_DIR = join(__dirname, 'screenshots');
 const SOURCE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_original.png');
@@ -54,7 +53,7 @@ describe('Puppeteer test', () => {
             const newContext = await globalThis.__BROWSER_GLOBAL__.createBrowserContext();
             const newPage = await newContext.newPage();
             newPage.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
-            await newPage.setViewport({ width: parsedEncodedPage.vv.w, height: parsedEncodedPage.vv.h });
+            await newPage.setViewport({ width: parsedEncodedPage.viewport.w, height: parsedEncodedPage.viewport.h });
             await newPage.evaluate(`window.PageBuilder = ${PageBuilder.toString()}`);
             await newPage.evaluate(
                 (treeIn: TreeType, cssIn: CssType) => {
@@ -63,12 +62,12 @@ describe('Puppeteer test', () => {
                             console.error(msg, error);
                         },
                     });
-                    const docFragment = builder.makePage({ tree: treeIn, css: cssIn });
+                    const docFragment = builder.makePage({ dom_tree: treeIn, css: cssIn });
                     document.open();
                     document.write(docFragment.querySelector('html')?.outerHTML ?? '');
                     document.close();
                 },
-                parsedEncodedPage.tree,
+                parsedEncodedPage.dom_tree,
                 parsedEncodedPage.css
             );
             await newPage.screenshot({ path: COMPARE_IMAGE_PATH });
