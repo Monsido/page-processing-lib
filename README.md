@@ -1,13 +1,27 @@
 # page-processing-lib
 
+## Licence
+page-processing-lib - A library for processing web pages and extracting data from them.
+Copyright (C) 2024-2025 Acquia Inc.
+
+page-processing-lib is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version.
+
+page-processing-lib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with page-processing-lib. If not, see <http://www.gnu.org/licenses/>.
+
 ## Idea
-We need to collect the data from page in 2 parts: 
+We need to collect the data from page in 2 parts:
 DOM elements with arguments
 CSS for every HTML element
 ### Process
 - Get the list of computed styles (CS) for HTML element - it will be used as the default one (approx. 379 entries) (Create a random element and get default CS from it, since HTML element may be affected by styles)
 - Iterate through DOM, processing element by element.
-- Collect CS for the element. 
+- Collect CS for the element.
 - Get a diff (keep only the properties which are different compared to the default CS) compared to the default CS.
 - Stringify the diff.
 - If there is a diff, and there is no such value yet in the collection, then add it to the collection.
@@ -28,7 +42,7 @@ usage:
 import { DataCollector } from 'page-processing-lib';
 
 const dataCollector = new DataCollector();
-dataCollector.collectData(html: HTMLDocument): JSON<{ tree, css }>;
+dataCollector.collectData(html: HTMLDocument): JSON<{ dom_tree, css }>;
 ```
 
 ### PageBuilder
@@ -39,16 +53,16 @@ usage:
 import { PageBuilder } from 'page-processing-lib';
 
 const pageBuilder = new PageBuilder();
-pageBuilder.makePage(JSON<{ tree, css}>): HTMLDocument;
+pageBuilder.makePage(JSON<{ dom_tree, css}>): HTMLDocument;
 ```
 
 ## Data structure
 ```ts
-// JSON<{tree; css;}>
-tree: Element = { // Tree of nodes
+// JSON<{dom_tree: Element, css: string[], version: string}>
+dom_tree: Element = { // Tree of nodes
     tn?: string; // (Tag name)
     ci?: number; // (computed style id)
-    a?: Array<Array<string>>;  // (attributes) [[‘font-size’, ‘17px’], [‘font-family’, ‘Arial’]] 
+    a?: Array<Array<string>>;  // (attributes) [[‘font-size’, ‘17px’], [‘font-family’, ‘Arial’]]
     c?: Array<Element | { t: string }>;  // (children) contains elements OR textNodes
     sr?: { // (ShadowRoot)
         {
@@ -61,12 +75,12 @@ tree: Element = { // Tree of nodes
     }
 }
 css: Array<string>; // CSS data the 0-entry contains the default CS
-v: string; // Library version
+version: string; // Library version
 ```
 Example
-```json 
+```json
 {
-    "tree": {
+    "dom_tree": {
 		"tn": "html",
 		"ci": 0,
 	    "a": [
@@ -87,7 +101,7 @@ Example
                             {
                                 "t": "Hello!"
                             }
-                        ]   
+                        ]
                     },
                     {
                         "tn": "div",
@@ -114,6 +128,6 @@ Example
         "color: rgb(153, 153, 153);", // ci2
         …
     ],
-    "v: "1.0.0",
+    "version": "1.0.0",
 }
 ```
