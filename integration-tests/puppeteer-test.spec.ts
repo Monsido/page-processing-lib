@@ -72,7 +72,7 @@ describe('Puppeteer test', () => {
                                 console.error(msg, error);
                             },
                         });
-                        const docFragment = builder.makePage({ tree: treeIn, css: cssIn });
+                        const docFragment = builder.makePage({ dom_tree: treeIn, css: cssIn });
                         document.open();
                         document.write(docFragment.querySelector('html')?.outerHTML ?? '');
                         document.close();

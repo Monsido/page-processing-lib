@@ -27,7 +27,7 @@ export class DataCollector {
     private monsidoIframeId = 'monsido-extension-iframe';
     private defaultStyles?: Record<string, string>;
 
-    async collectData (html: HTMLElement): Promise<{tree:TreeType, css:CssType, html:string, v: string, vv: { w: number, h: number }}> {
+    async collectData (html: HTMLElement): Promise<{dom_tree:TreeType, css:CssType, html:string, version: string, viewport: { w: number, h: number }}> {
         const { width, height } = this.getViewPortSize(html);
         if (!width || !height) {
             throw new Error('No viewport size found');
@@ -36,7 +36,7 @@ export class DataCollector {
         const newHtml = this.removeExtensionElements(html);
         const cleanedHtml = this.cleanUpText(newHtml.outerHTML);
         this.tree = await this.processTree(html);
-        return { tree: this.tree, css: this.css, html: cleanedHtml, v: version, vv: { w: width, h: height } };
+        return { dom_tree: this.tree, css: this.css, html: cleanedHtml, version: version, viewport: { w: width, h: height } };
     }
 
     private removeExtensionElements (html: HTMLElement): HTMLElement {
