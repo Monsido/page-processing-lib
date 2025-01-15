@@ -40,7 +40,7 @@ esbuild.build(cjsSettings).then(
         const declarationPath = resolve('./dist/src/index.d.ts');
 
         if (existsSync(declarationPath)) {
-            copyFileSync(declarationPath, './dist/index.cjs.d.ts');
+            copyFileSync(declarationPath, './dist/src/index.cjs.d.ts');
         }
     }
 ).catch(() => process.exit(1));
