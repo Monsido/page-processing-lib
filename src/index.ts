@@ -19,5 +19,5 @@
 */
 import { PageBuilder } from './page-builder/page-builder';
 import { DataCollector } from './data-collector/data-collector';
-
-export { PageBuilder, DataCollector };
+import { TreeType, CssType } from './types';
+export { PageBuilder, DataCollector, CssType, TreeType };
