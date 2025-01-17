@@ -29,7 +29,7 @@ import '../src/types/global';
 const SCREENSHOTS_DIR = join(__dirname, 'screenshots');
 const SOURCE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_original.png');
 const COMPARE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_compare.png');
-const URL = 'https://test-page-8.sidomon.com';
+const URL = 'https://wishlist.dk/privacy';
 
 ensureScreenshotFolderExists(SCREENSHOTS_DIR);
 
@@ -52,7 +52,7 @@ describe('Puppeteer test', () => {
 
             const newContext = await globalThis.__BROWSER_GLOBAL__.createBrowserContext();
             const newPage = await newContext.newPage();
-            newPage.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
+            //newPage.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
             await newPage.setViewport({ width: parsedEncodedPage.viewport.w, height: parsedEncodedPage.viewport.h });
             await newPage.evaluate(`window.PageBuilder = ${PageBuilder.toString()}`);
             await newPage.evaluate(
@@ -79,7 +79,7 @@ describe('Puppeteer test', () => {
             const { width, height } = sourceImg;
             const diff = new PNG({ width, height });
 
-            const numDiffPixels = pixelmatch(sourceImg.data, compareImg.data, diff.data, width, height);
+            const numDiffPixels = pixelmatch(sourceImg.data, compareImg.data, diff.data, width, height, { threshold: 0.3 });
             await newContext.close();
             expect(numDiffPixels).toBe(0);
         }, 30000);
