@@ -34,6 +34,7 @@ const pupArgs = [
     '--no-startup-window',
     '--no-zygote',
     // Set persistent Window Size for Page
+    `--window-size=1366,768`,
     '--disable-infobars',
     '--window-position=0,0',
     '--ignore-certificate-errors',
@@ -47,10 +48,11 @@ const processedOptions = Object.assign(
         headless: 'new',
         args: pupArgs,
         waitForInitialPage: false,
+        ignoreDefaultArgs: ['--hide-scrollbars'],
         // Set default viewport for page
         defaultViewport: {
-            width: 1920,
-            height: 1080,
+            width: 1366,
+            height: 768,
         },
     },
 );
