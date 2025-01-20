@@ -18,7 +18,7 @@
     along with page-processing-lib. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 /**
  * @jest-environment jsdom
  */
@@ -28,7 +28,7 @@ import { TreeType, CssType } from '../types';
 describe('PageBuilder', () => {
     let pageBuilder: PageBuilder;
     let docFragment = document.createDocumentFragment();
-    const onError = (msg: string, error: unknown) => {};
+    const onError = (msg: string, error: unknown): void => {};
     let pageBuilderOnErrorSpy: jest.SpyInstance;
 
     beforeEach(() => {
@@ -36,7 +36,7 @@ describe('PageBuilder', () => {
             docFragment.removeChild(docFragment.firstChild);
         }
         pageBuilder = new PageBuilder({
-            onError
+            onError,
         });
         pageBuilderOnErrorSpy = jest.spyOn(pageBuilder.errorHandler, 'onError');
     });
@@ -61,7 +61,8 @@ describe('PageBuilder', () => {
         });
 
         it('should be created', () => {
-            expect(docFragment.querySelector('div')?.outerHTML).toEqual(`<div data-cs-0="" name="container"><p data-cs-0="" data-cs-1="">Hello, World!</p></div>`);
+            expect(docFragment.querySelector('div')?.outerHTML)
+                .toEqual(`<div data-cs-0="" name="container"><p data-cs-0="" data-cs-1="">Hello, World!</p></div>`);
         });
 
         it('should contain a div with attribute', () => {
@@ -114,7 +115,7 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        pageBuilder.makePage({ dom_tree, css })
+        pageBuilder.makePage({ dom_tree, css });
         expect(pageBuilderOnErrorSpy).toHaveBeenCalledWith('Invalid data-cs-id: "undefined"');
     });
 
@@ -127,8 +128,8 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        pageBuilder.makePage({ dom_tree, css })
-        expect(pageBuilderOnErrorSpy).toHaveBeenNthCalledWith(1, 'Invalid Tag name: ',  expect.anything());
+        pageBuilder.makePage({ dom_tree, css });
+        expect(pageBuilderOnErrorSpy).toHaveBeenNthCalledWith(1, 'Invalid Tag name: ', expect.anything());
     });
 
     it('should throw an error if Node does not have a tagName or text property', () => {
@@ -137,7 +138,7 @@ describe('PageBuilder', () => {
 
         const css: CssType = ['color: red;'];
 
-        pageBuilder.makePage({ dom_tree, css })
+        pageBuilder.makePage({ dom_tree, css });
         expect(pageBuilderOnErrorSpy).toHaveBeenNthCalledWith(1, 'NodeType: Unknown node type');
     });
 

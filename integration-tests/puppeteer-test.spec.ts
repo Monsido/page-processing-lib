@@ -19,20 +19,17 @@
 */
 
 import { CssType, TreeType } from '../src/types';
-import { PageBuilder } from '../src';
+import { PageBuilder, DataCollector } from '../src';
 import pixelmatch from 'pixelmatch';
 import fs from 'fs';
 import { join } from 'path';
 const PNG = require('pngjs').PNG;
 import '../src/types/global';
-import { encodedPage } from './test-page-8-encoded-page.json'
 
 const SCREENSHOTS_DIR = join(__dirname, 'screenshots');
 const SOURCE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_original.png');
 const COMPARE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_compare.png');
 const URL = 'https://test-page-8.sidomon.com';
-const WIDTH = 1366;
-const HEIGHT = 768;
 
 ensureScreenshotFolderExists(SCREENSHOTS_DIR);
 
@@ -41,58 +38,50 @@ describe('Puppeteer test', () => {
 
     describe('Create browser, extract page data and reassemble it', () => {
         it('rendered page should be the same as the reconstructed page after using the page-processing-lib', async () => {
-                const context = await globalThis.__BROWSER_GLOBAL__.createIncognitoBrowserContext();
-                const page = await context.newPage();
-                await page.setViewport({ width: WIDTH, height: HEIGHT });
-                await page.goto(URL);
-                await page.screenshot({ path: SOURCE_IMAGE_PATH });
-                await context.close();
+            const context = await globalThis.__BROWSER_GLOBAL__.createBrowserContext();
+            const page = await context.newPage();
+            await page.goto(URL);
+            await page.evaluate(`window.DataCollector = ${DataCollector.toString()}`);
+            const parsedEncodedPage = await page.evaluate( async () => {
+                const dataCollector = new window.DataCollector();
+                dataCollector.setVersion('1.0.0');
+                return dataCollector.collectData(document.documentElement);
+            });
+            await page.screenshot({ path: SOURCE_IMAGE_PATH });
+            await context.close();
 
-                const newContext = await globalThis.__BROWSER_GLOBAL__.createIncognitoBrowserContext();
-                const newPage = await newContext.newPage();
-                newPage.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
-                let parsedEncodedPage: { dom_tree: TreeType, css: CssType, viewport: { w: number, h: number }, v: string } = {
-                    dom_tree: {},
-                    css: [],
-                    viewport: { w: 0, h: 0 },
-                    v: ''
-                };
-                try {
-                    parsedEncodedPage = JSON.parse(encodedPage);
-                } catch (e) {
-                    console.log('could not parse encoded page', e);
-                }
-                await newPage.setViewport({ width: parsedEncodedPage.viewport.w, height: parsedEncodedPage.viewport.h });
+            const newContext = await globalThis.__BROWSER_GLOBAL__.createBrowserContext();
+            const newPage = await newContext.newPage();
+            //newPage.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
+            await newPage.setViewport({ width: parsedEncodedPage.viewport.w, height: parsedEncodedPage.viewport.h });
+            await newPage.evaluate(`window.PageBuilder = ${PageBuilder.toString()}`);
+            await newPage.evaluate(
+                (treeIn: TreeType, cssIn: CssType) => {
+                    const builder = new window.PageBuilder({
+                        onError: (msg: string, error?: unknown): void => {
+                            console.error(msg, error);
+                        },
+                    });
+                    const docFragment = builder.makePage({ dom_tree: treeIn, css: cssIn });
+                    document.open();
+                    document.write(docFragment.querySelector('html')?.outerHTML ?? '');
+                    document.close();
+                },
+                parsedEncodedPage.dom_tree,
+                parsedEncodedPage.css
+            );
+            await newPage.screenshot({ path: COMPARE_IMAGE_PATH });
 
-                await newPage.evaluate(`window.PageBuilder = ${PageBuilder.toString()}`);
-                await newPage.evaluate(
-                    (treeIn: TreeType, cssIn: CssType) => {
-                        const builder = new window.PageBuilder({
-                            onError: (msg: string, error?: unknown): void => {
-                                console.error(msg, error);
-                            },
-                        });
-                        const docFragment = builder.makePage({ dom_tree: treeIn, css: cssIn });
-                        document.open();
-                        document.write(docFragment.querySelector('html')?.outerHTML ?? '');
-                        document.close();
-                    },
-                    parsedEncodedPage.dom_tree,
-                    parsedEncodedPage.css
-                );
+            const sourceImg = PNG.sync.read(fs.readFileSync(SOURCE_IMAGE_PATH));
+            const compareImg = PNG.sync.read(fs.readFileSync(COMPARE_IMAGE_PATH));
 
-                await newPage.screenshot({ path: COMPARE_IMAGE_PATH });
+            // Create a diff image
+            const { width, height } = sourceImg;
+            const diff = new PNG({ width, height });
 
-                const sourceImg = PNG.sync.read(fs.readFileSync(SOURCE_IMAGE_PATH));
-                const compareImg = PNG.sync.read(fs.readFileSync(COMPARE_IMAGE_PATH));
-
-                // Create a diff image
-                const { width, height } = sourceImg;
-                const diff = new PNG({ width, height });
-
-                const numDiffPixels = pixelmatch(sourceImg.data, compareImg.data, diff.data, width, height);
-                await newContext.close();
-                expect(numDiffPixels).toBe(0);
+            const numDiffPixels = pixelmatch(sourceImg.data, compareImg.data, diff.data, width, height);
+            await newContext.close();
+            expect(numDiffPixels).toBe(0);
         }, 30000);
     });
 });

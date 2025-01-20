@@ -79,7 +79,7 @@ export class PageBuilder {
         return null;
     }
 
-    private parseElementNode (node: ElementType, cssList: CssKVType): HTMLElement| null {
+    private parseElementNode (node: ElementType, cssList: CssKVType): HTMLElement | null {
         let element: HTMLElement;
         try {
             element = document.createElement(node.tn || '');

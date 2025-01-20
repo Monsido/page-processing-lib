@@ -1,5 +1,0 @@
-if ! yarn test; then
-  echo "Tests failed, running custom script..."
-  node scripts/notify-pre-pushhook-failed.js
-  exit 1
-fi

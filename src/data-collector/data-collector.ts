@@ -23,11 +23,12 @@ import { version } from '../../package.json';
 export class DataCollector {
     private tree: TreeType = {};
     private css: CssType = [];
+    private version?: string;
     private disallowedTagNames = ['STYLE', 'SCRIPT', 'MONSIDO-EXTENSION'];
     private monsidoIframeId = 'monsido-extension-iframe';
     private defaultStyles?: Record<string, string>;
 
-    async collectData (html: HTMLElement): Promise<{dom_tree:TreeType, css:CssType, html:string, version: string, viewport: { w: number, h: number }}> {
+    async collectData (html: HTMLElement): Promise<{ dom_tree: TreeType, css: CssType, html: string, version: string, viewport: { w: number, h: number } }> {
         const { width, height } = this.getViewPortSize(html);
         if (!width || !height) {
             throw new Error('No viewport size found');
@@ -36,7 +37,11 @@ export class DataCollector {
         const newHtml = this.removeExtensionElements(html);
         const cleanedHtml = this.cleanUpText(newHtml.outerHTML);
         this.tree = await this.processTree(html);
-        return { dom_tree: this.tree, css: this.css, html: cleanedHtml, version: version, viewport: { w: width, h: height } };
+        return { dom_tree: this.tree, css: this.css, html: cleanedHtml, version: this.version || version, viewport: { w: width, h: height } };
+    }
+
+    public setVersion (v: string): void {
+        this.version = v;
     }
 
     private removeExtensionElements (html: HTMLElement): HTMLElement {
@@ -143,14 +148,14 @@ export class DataCollector {
     private getStylesAsRecord (el: HTMLElement): Record<string, string> {
         const styleObj = window.getComputedStyle(el);
         const result: Record<string, string> = {};
-        for (let i = styleObj.length; i--; ) {
+        for (let i = styleObj.length; i--;) {
             const nameString = styleObj[i];
             result[nameString] = `${styleObj.getPropertyValue(nameString)};`;
         }
         return result;
     }
 
-    private collectUniqueStyles (el: HTMLElement): {styles: string, sameId: number | undefined} {
+    private collectUniqueStyles (el: HTMLElement): { styles: string, sameId: number | undefined } {
         const styles = this.collectStyles(this.getStylesAsRecord(el), this.defaultStyles);
         let sameId: number | undefined;
 
