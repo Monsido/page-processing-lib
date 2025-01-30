@@ -4,8 +4,8 @@
     "main": "dist/index.js",
     "types": "dist/src/index.d.ts",
     "repository": "git@github.com:Monsido/page-processing-lib.git",
-    "author": "Monsido frontend team",
-    "license": "MIT",
+    "author": "Acquia Inc <engineering@acquia.com>"
+    "license": "GPL",
     "private": true,
     "scripts": {
         "build": "node build/build.mjs",
