@@ -1,21 +1,8 @@
 # page-processing-lib
 
-## Licence
-page-processing-lib - A library for processing web pages and extracting data from them.
-Copyright (C) 2024-2025 Acquia Inc.
-
-page-processing-lib is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version.
-
-page-processing-lib is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with page-processing-lib. If not, see <http://www.gnu.org/licenses/>.
-
 ## Api
 The library exposes two classes **DataCollector** and **PageBuilder**.
+
 ### DataCollector
 The DataCollector exposes one method **collectData** that takes a html document as parameter. The return value will be a json formatted object with tree and css properties.
 
@@ -112,4 +99,19 @@ Example
     ],
     "version": "1.0.0",
 }
+
+## Licence
+page-processing-lib - A library for processing web pages and extracting data from them.
+Copyright (C) 2024-2025 Acquia Inc.
+
+page-processing-lib is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version.
+
+page-processing-lib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with page-processing-lib. If not, see <http://www.gnu.org/licenses/>.
+
 ```
