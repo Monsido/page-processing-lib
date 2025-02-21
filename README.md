@@ -97,8 +97,9 @@ Example
         "color: rgb(153, 153, 153);", // ci2
         …
     ],
-    "version": "1.0.0",
+    "version": "1.0.0"
 }
+```
 
 ## Licence
 page-processing-lib - A library for processing web pages and extracting data from them.
@@ -113,5 +114,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with page-processing-lib. If not, see <http://www.gnu.org/licenses/>.
-
-```
