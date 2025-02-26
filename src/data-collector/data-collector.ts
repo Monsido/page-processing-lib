@@ -174,7 +174,7 @@ export class DataCollector {
         }
 
         return Object.entries(stylesObj)
-            .map(([key, value]) => `${key}:${value}`)
+            .map(([key, value]) => `${this.escapeQuotation(key)}:${this.escapeQuotation(value)}`)
             .join('');
     }
 
@@ -197,6 +197,10 @@ export class DataCollector {
 
     private cleanUpText (text: string): string {
         return text.replaceAll(/ +/g, ' ');
+    }
+
+    private escapeQuotation (text: string): string {
+        return text.replaceAll(/"/g, '\\"');
     }
 
 }
