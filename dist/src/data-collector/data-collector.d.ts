@@ -28,4 +28,5 @@ export declare class DataCollector {
     private removeDefaultStyles;
     private getAttributesList;
     private cleanUpText;
+    private escapeQuotation;
 }
