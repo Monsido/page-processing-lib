@@ -16,7 +16,7 @@ const ctx = await esbuild.context(settings);
 await ctx.watch();
 
 const { port } = await ctx.serve({
-  port: 5000,
+  port: 8000,
   servedir: 'www',
   fallback: 'index.html',
 });

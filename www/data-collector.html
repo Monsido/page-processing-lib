@@ -34,7 +34,7 @@
         }
         customElements.define('my-element', MyElement);
     </script>
-    <script type="module">  
+    <script type="module">
         import { DataCollector } from './index.js';
 
         async function collectData () {
@@ -56,6 +56,16 @@
         <pre id="data_collector_output"></pre>
         <my-element>
             <div slot="main">This is a custom element</div>
+            <p class="nest-text-red">with some content</p>
+        </my-element>
+        <my-element>
+            <div slot="main">
+                <my-element>
+                    <style>.nest-text-red { color: red; }</style>
+                    <div slot="main" class="nest-text-red">This is a nested custom element</div>
+                    <p>with some content</p>
+                </my-element>
+            </div>
             <p>with some content</p>
         </my-element>
 </body>
