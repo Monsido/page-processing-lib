@@ -14,10 +14,10 @@
         "build": "node build/build.mjs",
         "serve": "node build/serve.mjs",
         "lint": "eslint",
-        "test": "yarn test:u && yarn test:i",
+        "test": "npm run test:u && npm run test:i",
         "test:u": "jest --config=jest.unit.config.js",
         "test:i": "jest --config=jest.integration.config.js",
-        "version": "yarn version"
+        "version": "npm run version"
     },
     "exports": {
         ".": {
