@@ -23,7 +23,6 @@ export default tseslint.config([
             '@stylistic/comma-style': 'error',
             '@stylistic/computed-property-spacing': 'error',
             '@stylistic/eol-last': 'error',
-            '@stylistic/func-call-spacing': 'error',
             '@stylistic/generator-star-spacing': ['error', 'after'],
             '@stylistic/indent': ['error', 4],
             '@stylistic/key-spacing': 'error',
@@ -53,7 +52,7 @@ export default tseslint.config([
             '@stylistic/padded-blocks': 'off',
             '@stylistic/quote-props': 'off',
             '@stylistic/quotes': ['error', 'single', {
-                allowTemplateLiterals: true,
+                allowTemplateLiterals: 'always',
             }],
             '@stylistic/rest-spread-spacing': 'error',
             '@stylistic/semi': 'error',
@@ -70,6 +69,7 @@ export default tseslint.config([
             '@stylistic/switch-colon-spacing': 'error',
             '@stylistic/wrap-iife': 'off',
             '@stylistic/yield-star-spacing': ['error', 'after'],
+            '@/func-call-spacing': 'error',
             '@typescript-eslint/explicit-function-return-type': 'error',
             '@typescript-eslint/explicit-module-boundary-types': 'off',
             '@typescript-eslint/naming-convention': ['error', {
