@@ -29,6 +29,10 @@
                 "types": "./dist/src/index.d.ts",
                 "default": "./dist/index.js"
             }
+        },
+        "./esm": {
+            "types": "./dist/src/index.mjs.d.ts",
+            "default": "./dist/index.mjs"
         }
     },
     "files": [
