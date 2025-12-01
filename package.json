@@ -1,6 +1,6 @@
 {
     "name": "page-processing-lib",
-    "version": "4.1.3",
+    "version": "4.1.5",
     "main": "dist/index.js",
     "types": "dist/src/index.d.ts",
     "repository": "git@github.com:Monsido/page-processing-lib.git",
@@ -25,11 +25,19 @@
                 "types": "./dist/src/index.cjs.d.ts",
                 "default": "./dist/index.cjs.js"
             },
-            "import": "./dist/index.js"
+            "import": {
+                "types": "./dist/src/index.d.ts",
+                "default": "./dist/index.js"
+            }
+        },
+        "./esm": {
+            "types": "./dist/src/index.mjs.d.ts",
+            "default": "./dist/index.mjs"
         }
     },
     "files": [
         "dist/**/*.js",
+        "dist/**/*.mjs",
         "dist/**/*.d.ts"
     ],
     "jest": {

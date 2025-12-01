@@ -28,12 +28,18 @@ const esmSettings = createBuildSettings({
     format: 'esm',
     outfile: 'dist/index.js',
 });
+const esmMjsSettings = createBuildSettings({
+    ...commonSettings,
+    format: 'esm',
+    outfile: 'dist/index.mjs',
+});
 const cjsSettings = createBuildSettings({
     ...commonSettings,
     format: 'cjs',
     outfile: 'dist/index.cjs.js',
 });
 esbuild.build(esmSettings).catch(() => process.exit(1));
+esbuild.build(esmMjsSettings).catch(() => process.exit(1));
 esbuild.build(cjsSettings).then(
     () => {
         // copy index.d.ts from src to dist
@@ -41,6 +47,7 @@ esbuild.build(cjsSettings).then(
 
         if (existsSync(declarationPath)) {
             copyFileSync(declarationPath, './dist/src/index.cjs.d.ts');
+            copyFileSync(declarationPath, './dist/src/index.mjs.d.ts');
         }
     }
 ).catch(() => process.exit(1));
