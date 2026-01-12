@@ -65,5 +65,8 @@
         "ts-jest": "^29.4.4",
         "typescript": "^5.9.2",
         "typescript-eslint": "^8.44.0"
+    },
+    "overrides": {
+        "glob": "^10.5.0"
     }
 }
