@@ -1,0 +1,21 @@
+openapi: 3.0.1
+info:
+  title: Monsido Page Processing Library
+  description: Library to support the Monsido frontend and Monsido Extension
+  x-cortex-tag: Monsido/page-processing-library
+  x-cortex-git:
+    github:
+      repository: Monsido/page-processing-library
+  x-cortex-owners:
+    - type: GROUP
+      name: Monsido/frontend-developers
+      provider: GITHUB
+      description: Monsido Frontend team
+    - type: SLACK
+      channel: opt-pe-chat
+      notificationsEnabled: true
+      description: Monsido R&D slack channel
+  x-cortex-groups:
+    - drupal-cloud
+    - optimize
+    - is-service
