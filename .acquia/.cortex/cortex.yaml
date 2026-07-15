@@ -12,7 +12,7 @@ info:
       provider: GITHUB
       description: Monsido Frontend team
     - type: SLACK
-      channel: opt-pe-chat
+      channel: webgov-pe-chat
       notificationsEnabled: true
       description: Monsido R&D slack channel
   x-cortex-groups:
