@@ -68,11 +68,23 @@
   },
   "overrides": {
     "glob": "^10.5.0",
-    "js-yaml": "^4.2.0",
+    "js-yaml": "4.3.2",
     "@babel/core": "^7.29.1",
-    "brace-expansion": "^2.0.3",
+    "brace-expansion": "2.1.2",
     "minimatch@3.1.5": {
       "brace-expansion": "^1.1.13"
-    }
+    },
+    "baseline-browser-mapping": "2.11.0",
+    "browserslist": "4.28.7",
+    "@humanfs/node": "0.16.8",
+    "ip-address": "10.3.1"
+  },
+  "resolutions": {
+    "js-yaml": "4.3.2",
+    "baseline-browser-mapping": "2.11.0",
+    "browserslist": "4.28.7",
+    "@humanfs/node": "0.16.8",
+    "brace-expansion": "2.1.2",
+    "ip-address": "10.3.1"
   }
 }
