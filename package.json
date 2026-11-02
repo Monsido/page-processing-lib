@@ -74,8 +74,8 @@
     "minimatch@3.1.5": {
       "brace-expansion": "^1.1.13"
     },
-    "baseline-browser-mapping": "2.11.0",
-    "browserslist": "4.28.7",
+    "baseline-browser-mapping": "^2.11.22",
+    "browserslist": "^4.28.9",
     "@humanfs/node": "0.16.8",
     "ip-address": "10.7.3"
   },
