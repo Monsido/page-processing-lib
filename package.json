@@ -54,7 +54,7 @@
     "@types/pixelmatch": "^5.2.6",
     "@typescript-eslint/eslint-plugin": "^8.72.1",
     "@typescript-eslint/parser": "^8.72.1",
-    "esbuild": "^0.28.2",
+    "esbuild": "^0.25.10",
     "eslint": "^9.36.0",
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
