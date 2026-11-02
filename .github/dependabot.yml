@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      # one PR per week for all patch/minor version updates
+      npm-patch-minor:
+        applies-to: version-updates
+        update-types: ["patch", "minor"]
+      # one PR for all patch/minor security updates
+      npm-security-patch-minor:
+        applies-to: security-updates
+        update-types: ["patch", "minor"]
