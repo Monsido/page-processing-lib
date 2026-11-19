@@ -27,8 +27,8 @@ const PNG = require('pngjs').PNG;
 import '../src/types/global';
 
 const SCREENSHOTS_DIR = join(__dirname, 'screenshots');
-const SOURCE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_original.png');
-const COMPARE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_compare.png');
+const SOURCE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_original.png') as `${string}.png`;
+const COMPARE_IMAGE_PATH = join(SCREENSHOTS_DIR, 'screenshot_compare.png') as `${string}.png`;
 const URL = 'https://test-page-8.sidomon.com';
 
 ensureScreenshotFolderExists(SCREENSHOTS_DIR);
