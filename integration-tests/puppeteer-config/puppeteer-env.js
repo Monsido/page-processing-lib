@@ -41,6 +41,11 @@ class PuppeteerEnvironment extends NodeEnvironment {
         // connect to puppeteer
         this.global.__BROWSER_GLOBAL__ = await puppeteer.connect({
             browserWSEndpoint: wsEndpoint,
+            // connect() does not inherit the launch defaultViewport, keep in sync with setup.js
+            defaultViewport: {
+                width: 1366,
+                height: 768,
+            },
         });
     }
 

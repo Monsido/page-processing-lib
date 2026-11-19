@@ -125,7 +125,13 @@ describe('DataCollector', () => {
             'ci': 0,
             'tn': 'HTML',
         };
-        const expectedCss = ['visibility:visible;', 'display:none;', 'margin:8px;display:block;', 'display:block;'];
+        // jsdom computes these properties for every element, so they end up in the default (root) styles
+        const defaultCss = 'color:canvastext;caret-color:auto;' +
+            'border-left-color:canvastext;border-bottom-color:canvastext;border-right-color:canvastext;border-top-color:canvastext;' +
+            'border-inline-end-color:CanvasText;border-inline-start-color:CanvasText;' +
+            'border-block-end-color:CanvasText;border-block-start-color:CanvasText;' +
+            'background-color:rgba(0, 0, 0, 0);pointer-events:auto;visibility:visible;';
+        const expectedCss = [defaultCss, 'display:none;', 'margin:8px;display:block;', 'display:block;'];
 
         it('should collect HTML as tree', async () => {
             const result = await dataCollector.collectData(html);
@@ -164,9 +170,15 @@ describe('DataCollector', () => {
         });
 
         it('same styles are added only once', async () => {
+            const blue = 'rgb(0, 0, 255)';
+            const expectedStyle = `border-left-color:${blue};border-bottom-color:${blue};` +
+                `border-right-color:${blue};border-top-color:${blue};` +
+                `border-inline-end-color:${blue};border-inline-start-color:${blue};` +
+                `border-block-end-color:${blue};border-block-start-color:${blue};` +
+                `color:${blue};display:inline-block;`;
             const result = await dataCollector.collectData(html);
             expect(
-                result.css.filter(i => i === 'color:blue;display:inline-block;').length,
+                result.css.filter(i => i === expectedStyle).length,
             ).toEqual(1);
         });
 
