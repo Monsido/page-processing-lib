@@ -59,7 +59,7 @@
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
     "jest-environment-node": "^30.1.2",
-    "pixelmatch": "^7.1.0",
+    "pixelmatch": "^8.0.0",
     "png-js": "^1.0.0",
     "puppeteer": "^24.22.0",
     "ts-jest": "^29.4.15",
